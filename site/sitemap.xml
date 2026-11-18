@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://osvaldomarino.dev/</loc><lastmod>2026-11-18</lastmod></url>
+  <url><loc>https://osvaldomarino.dev/blog/</loc><lastmod>2026-11-18</lastmod></url>
+  <url><loc>https://osvaldomarino.dev/blog/hardening-my-homelab/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://osvaldomarino.dev/blog/home-soc-with-wazuh/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://osvaldomarino.dev/blog/zero-open-ports-website/</loc><lastmod>2026-10-21</lastmod></url>
+  <url><loc>https://osvaldomarino.dev/blog/simulated-attack-incident-report/</loc><lastmod>2026-10-26</lastmod></url>
+</urlset>

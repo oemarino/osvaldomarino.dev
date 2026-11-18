@@ -1,0 +1,60 @@
+<header>
+      <div class="meta"><span class="pill">Incident response</span><span><time datetime="2026-10-26">October 26, 2026</time></span><span>· Osvaldo Marino</span><span class="hist">Results are a snapshot from tests on Oct 26, 2026</span></div>
+      <h1>Incident report: attacking my own lab and grading my SIEM</h1>
+      <p class="lead">I attacked my own isolated practice lab on purpose, in stages, like a real intruder would. Then I wrote it up the way a SOC analyst would: timeline, evidence, impact, and the gaps I found. Spoiler: the custom rule I wrote earlier caught every boolean SQL injection, and one attack got through without a single alert.</p>
+     </header>
+     <section class="prose">
+          <div class="k">Scope</div>
+          <h2>A controlled simulation, not a breach</h2>
+          <p>This was a <strong>self-authorized lab exercise</strong>. The attacker and the targets were both machines I own. The targets were <strong>DVWA</strong> and <strong>OWASP Juice Shop</strong>, two apps that are vulnerable on purpose, running on a Docker network with <strong>no internet access</strong>. They’re reachable only from the server itself or over my private Tailscale network, and they’re switched off unless I’m testing. No production service, third party or public-facing system was touched.</p>
+          <p>The point wasn’t to break the apps, which are built to be broken. It was to measure what my <strong>Wazuh 4.14.9</strong> SIEM actually detects, reading the lab’s nginx access logs, and to practice writing a proper incident report.</p>
+     </section>
+     <section class="prose">
+          <div class="k">The attack chain</div>
+          <h2>What I ran and what Wazuh saw</h2>
+          <div class="tbl"><table>
+            <thead><tr><th>Stage</th><th>Attack</th><th>Detection</th></tr></thead>
+            <tbody>
+              <tr><td>Recon</td><td><code>nmap -sV -sC</code> against the two lab apps</td><td class="good">Rule <code>31151</code>, level 10: many web 400s from one source (MITRE T1595.002)</td></tr>
+              <tr><td>SQLi (UNION)</td><td><code>1' UNION SELECT user,password FROM users</code></td><td class="good">Rule <code>31106</code>, level 6: web attack returned 200 (T1190)</td></tr>
+              <tr><td>SQLi (boolean) ×3</td><td><code>1' OR '1'='1</code>, <code>1' OR 1=1--</code>, <code>x' OR 'a'='a</code></td><td class="good">Custom rule <code>100101</code>, <strong>level 12</strong>, 3 of 3 (T1190)</td></tr>
+              <tr><td>Reflected XSS</td><td><code>&lt;script&gt;alert(1)&lt;/script&gt;</code></td><td class="good">Rule <code>31106</code>, level 6 (T1190)</td></tr>
+              <tr><td>File inclusion</td><td><code>../../../../etc/passwd</code></td><td class="good">Rule <code>31106</code>, level 6 (T1190)</td></tr>
+              <tr><td>Juice Shop SQLi (GET)</td><td>Product search <code>apple')) UNION SELECT 1--</code></td><td class="good">Rule <code>31103</code>, level 7: SQL injection attempt (T1190)</td></tr>
+              <tr><td>Juice Shop SQLi (POST)</td><td>Login bypass, <code>' OR 1=1--</code> in the JSON body</td><td class="bad">Missed: no alert</td></tr>
+            </tbody>
+          </table></div>
+          <p style="margin-top:14px">The whole chain took about two seconds after the scan, and the alerts landed within a second of the attacks. I skipped an SSH brute-force stage on purpose: the lab has no SSH service, and I wasn’t going to aim it at my real server’s SSH.</p>
+     </section>
+     <section class="prose">
+          <div class="k">The headline</div>
+          <h2>The detection gap I closed held up</h2>
+          <p>In my <a href="/blog/home-soc-with-wazuh/">first SOC lab test</a>, the boolean <code>OR '1'='1'</code> injection returned every user row and Wazuh said nothing, because the stock rules look for keywords like <code>UNION</code> or <code>SELECT</code>. I wrote <a href="https://github.com/oemarino/homelab/blob/main/docs/wazuh-custom-rule-boolean-sqli.md" target="_blank" rel="noopener noreferrer">custom rules 100100/100101</a> that match the <em>shape</em> of a boolean injection instead.</p>
+          <p>This time, all three boolean variants raised <strong>rule 100101 at level 12</strong>, the highest-severity alerts of the whole exercise, mapped to MITRE ATT&amp;CK <strong>T1190</strong> (Exploit Public-Facing Application). Recon was also caught by a <em>correlation</em> rule, not just a pile of individual 404s, which is the early “someone is scanning us” signal an analyst wants.</p>
+     </section>
+     <section class="prose">
+          <div class="k">The honest misses</div>
+          <h2>Where my pipeline is blind</h2>
+          <ul>
+            <li><strong>SQL injection in a POST body.</strong> The Juice Shop login bypass worked and raised nothing. nginx access logs record the method, URL and status code, not the request body, so a log-based SIEM never saw the payload. The fix is body inspection: a WAF like ModSecurity or Coraza with the OWASP Core Rule Set in front of the lab.</li>
+            <li><strong>No network-layer visibility.</strong> A plain TCP port scan with no web requests wouldn’t show up in these logs at all. Next step: Suricata as a network IDS, feeding Wazuh.</li>
+            <li><strong>Generic labels.</strong> XSS and file inclusion were both just “web attack returned 200.” They were detected, but an analyst would want them labelled as what they are, so I plan custom rules for those too.</li>
+          </ul>
+     </section>
+     <section class="prose">
+          <div class="k">Impact and cleanup</div>
+          <h2>Closing the case</h2>
+          <p><strong>Real impact: none.</strong> The “user table” the UNION injection dumped holds only DVWA’s demo accounts in a throwaway container. On a real app, the same injections would have exposed usernames and password hashes, which is why I rated the simulated severity <strong>High</strong>.</p>
+          <p>After the test I ran <code>lab down</code>, confirmed all four lab containers and both lab networks were gone and nothing was still listening on the lab ports, and deleted the temporary attack files. My SSH, firewall, VPN, Cloudflare and website configs were never touched.</p>
+          <p>The full report, with the timeline, sanitized alert JSON and every command I ran, is on GitHub: <a href="https://github.com/oemarino/homelab/blob/main/docs/incident-report-simulated-attack.md" target="_blank" rel="noopener noreferrer">incident-report-simulated-attack.md</a>.</p>
+     </section>
+     <section class="prose learned">
+          <div class="k">What I learned</div>
+          <h2>What I learned</h2>
+          <ul>
+            <li><strong>Retest your fixes.</strong> A detection rule only counts once it fires on a live attack, not just in a test tool.</li>
+            <li><strong>Know what your logs can’t see.</strong> The miss wasn’t a bad rule. The data simply wasn’t there, and no rule can match a payload that never gets logged.</li>
+            <li><strong>Severity tells a story.</strong> Level 12 on a likely-successful injection versus level 6 on a generic hit is the difference between “look now” and “look later.”</li>
+            <li><strong>Write it up like it’s real.</strong> A timeline, evidence and lessons learned turn a lab exercise into something another analyst could act on.</li>
+          </ul>
+     </section>

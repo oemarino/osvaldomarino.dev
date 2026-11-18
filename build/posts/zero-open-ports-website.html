@@ -1,0 +1,54 @@
+<header>
+      <div class="meta"><span class="pill">Secure hosting</span><span><time datetime="2026-10-20">October 20, 2026</time></span><span>· Osvaldo Marino</span><span class="hist">Results are a snapshot from tests on Oct 20, 2026</span></div>
+      <h1>Hosting a hardened website from home with zero open ports</h1>
+      <p class="lead">The site you’re reading is served from a server in my home, but my router has no port forward for it and the server’s firewall has no rule for it. Here’s how.</p>
+     </header>
+     <section class="prose">
+          <div class="k">The idea</div>
+          <h2>Let the server dial out instead of letting the internet dial in</h2>
+          <p>A <strong>Cloudflare Tunnel</strong> (<code>cloudflared</code>) on the server opens an <em>outbound</em> connection to Cloudflare. Visitors connect to Cloudflare over HTTPS, and Cloudflare passes requests down that tunnel to a web container listening only on <code>127.0.0.1</code>. There’s no inbound port to scan, no port forward on the router, and no firewall rule to get wrong.</p>
+          <pre><code>Visitor ──HTTPS──▶ Cloudflare ◀──outbound tunnel── cloudflared ──▶ localhost-only port ──▶ nginx container</code></pre>
+     </section>
+     <section class="prose">
+          <div class="k">The container</div>
+          <h2>A web server with as few privileges as possible</h2>
+          <ul>
+            <li><code>nginxinc/nginx-unprivileged</code> running as UID 101, never root</li>
+            <li><code>read_only: true</code> root filesystem, with small <code>noexec</code> tmpfs mounts for cache and temp files</li>
+            <li><code>cap_drop: ALL</code> and <code>no-new-privileges</code></li>
+            <li>Memory, CPU and process limits, so a bug can’t take down the rest of the homelab</li>
+            <li>The site files are mounted read-only, the server only answers GET/HEAD, and hidden files like <code>.git</code> or <code>.env</code> return 404</li>
+          </ul>
+     </section>
+     <section class="prose">
+          <div class="k">The headers</div>
+          <h2>A strict Content Security Policy</h2>
+          <p>Every response carries <code>X-Content-Type-Options: nosniff</code>, <code>X-Frame-Options: DENY</code>, a Referrer-Policy, a Permissions-Policy and Cross-Origin-Opener-Policy. The CSP starts from <code>default-src 'none'</code> and allows only what the site needs:</p>
+          <pre><code>default-src 'none'; script-src 'self'; style-src 'unsafe-inline';
+img-src 'self' data:; font-src 'self'; base-uri 'none';
+form-action 'none'; frame-ancestors 'none'</code></pre>
+          <p>Because inline scripts are blocked, all of this site’s JavaScript, including the Windows 7 desktop and the simulated Command Prompt, lives in small same-origin files. It’s also progressive enhancement: with JavaScript off, every word on the page is still visible.</p>
+     </section>
+     <section class="prose">
+          <div class="k">Verification</div>
+          <h2>Checking from the outside</h2>
+          <div class="tbl"><table>
+            <thead><tr><th>Check</th><th>Result</th></tr></thead>
+            <tbody>
+              <tr><td>IPv4, 1,007 TCP ports (including 22, 80 and 443)</td><td class="num good">0 open</td></tr>
+              <tr><td>IPv6, both server addresses, 16 common ports each</td><td class="good">All blocked (timed out)</td></tr>
+            </tbody>
+          </table></div>
+          <p style="margin-top:14px">I used public outside-in checkers, each validated against a host with known open ports, because my scanning machine’s proxied connection gave misleading <code>nmap</code> results. To be precise: I ran this check earlier the same day, before the site went live. The tunnel only makes outbound connections, so it adds no inbound port. It’s also not a full 65,535-port or UDP scan.</p>
+          <p>The sanitized compose file, nginx config and an example tunnel config are in <a href="https://github.com/oemarino/homelab" target="_blank" rel="noopener noreferrer">github.com/oemarino/homelab</a>.</p>
+     </section>
+     <section class="prose learned">
+          <div class="k">What I learned</div>
+          <h2>What I learned</h2>
+          <ul>
+            <li><strong>The best open port is no open port.</strong> An outbound tunnel removes a whole class of exposure instead of trying to defend it.</li>
+            <li><strong>Least privilege applies to containers too.</strong> Non-root, read-only, no capabilities and resource limits cost nothing for a static site.</li>
+            <li><strong>Security constraints shape design.</strong> A strict CSP pushed me toward cleaner code with no inline scripts and graceful no-JS fallbacks.</li>
+            <li><strong>Measure what you claim, and state the limits.</strong> “Zero open ports” is backed by a validated scan, with its caveats written down.</li>
+          </ul>
+     </section>

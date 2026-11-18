@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hardening my homelab: 9 findings to 0 | Osvaldo Marino</title>
+<meta name="description" content="How I took a Greenbone/OpenVAS scan of my homelab server from 9 Medium/Low findings to 0 real findings, with the before/after numbers.">
+<meta name="author" content="Osvaldo Marino">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="canonical" href="https://osvaldomarino.dev/blog/hardening-my-homelab/">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<div class="wrap">
+  <header class="site">
+    <a class="mark" href="/">osvaldomarino.dev</a>
+    <nav aria-label="Primary">
+      <a href="/">About</a>
+      <a href="/#projects">Projects</a>
+      <a href="/#experience">Experience</a>
+      <a href="/blog/">Write-ups</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+  </header>
+  <main id="content">
+    <article class="card article-card">
+<header>
+      <div class="meta"><span class="pill">Vulnerability management</span><span><time datetime="2026-10-20">October 20, 2026</time></span><span>· Osvaldo Marino</span><span class="hist">Results are a snapshot from tests on Oct 20, 2026</span></div>
+      <h1>Hardening my homelab: 9 findings to 0</h1>
+      <p class="lead">I pointed a vulnerability scanner at my own homelab server, fixed what it found, and scanned again. Here are the real numbers, including the one finding I couldn’t make disappear and why that’s okay.</p>
+     </header>
+     <section class="prose">
+          <div class="k">The scan</div>
+          <h2>Same scanner, same target, before and after</h2>
+          <p>The server runs Ubuntu Server 24.04 with OpenSSH, a game-server panel (AMP), Webmin and Docker. I scanned it with <strong>Greenbone Community Edition (OpenVAS)</strong> using the “Full and fast” config across all TCP ports plus the Nmap top 100 UDP ports, and filtered both reports the same way (QoD ≥ 70, no overrides).</p>
+          <div class="tbl"><table>
+            <thead><tr><th>Severity</th><th>Before</th><th>After</th></tr></thead>
+            <tbody>
+              <tr><td>Critical</td><td class="num good">0</td><td class="num good">0</td></tr>
+              <tr><td>High</td><td class="num good">0</td><td class="num good">0</td></tr>
+              <tr><td>Medium</td><td class="num warn">6</td><td class="num">1 <span class="warn" style="font-weight:500">(false positive)</span></td></tr>
+              <tr><td>Low</td><td class="num warn">3</td><td class="num good">0</td></tr>
+              <tr><td>Log (info only)</td><td class="num">43</td><td class="num">51</td></tr>
+            </tbody>
+          </table></div>
+          <p style="margin-top:14px">Medium and Low findings went from <strong>9 to 1</strong>, and that one is a documented false positive, so <strong>0 real findings are left</strong>. Info-level entries went up because a new HTTPS endpoint produces informational TLS notes with no severity.</p>
+     </section>
+     <section class="prose">
+          <div class="k">The fixes</div>
+          <h2>What I changed</h2>
+          <ul>
+            <li><strong>Weak SSH MACs (Low).</strong> I added an sshd drop-in with explicit strong <code>MACs</code>, <code>KexAlgorithms</code> (post-quantum hybrid <code>sntrup761x25519</code> first) and <code>Ciphers</code>. I validated it with <code>sshd -t</code>, reloaded instead of restarting, and tested a new login before closing my old session. Now <!--email_off--><code>ssh -m umac-64@openssh.com</code><!--/email_off--> gets “no matching MAC found”.</li>
+            <li><strong>Cleartext panel login over HTTP (Medium).</strong> I put a hardened nginx TLS reverse proxy in front of the panel (TLS 1.2/1.3, ECDHE + AEAD ciphers, HSTS, non-root and read-only container). The firewall now drops plain HTTP except from localhost and the encrypted Tailscale network.</li>
+            <li><strong>Weak key exchange and CBC/3DES ciphers on the panel’s built-in SFTP servers (4 × Medium).</strong> The vendor offers no setting to fix the crypto, so I reduced exposure instead: rules in ufw’s <code>before.rules</code> allow those ports only over Tailscale and drop them everywhere else, ahead of any user rule. <em>Residual risk:</em> the weak algorithms still exist, but only authenticated tailnet devices can reach them.</li>
+            <li><strong>TCP timestamps (Low).</strong> I set <code>net.ipv4.tcp_timestamps = 0</code> so the server stops leaking its uptime.</li>
+            <li><strong>ICMP timestamp replies (Low).</strong> The firewall drops ICMP type 13. Normal ping still works.</li>
+          </ul>
+     </section>
+     <section class="prose">
+          <div class="k">The last Medium</div>
+          <h2>Proving a false positive</h2>
+          <p>Greenbone reported “Linux Home Folder Accessible” because a request for <code>/.ssh/known_hosts</code> returned HTTP 200. The panel is a single-page app that returns its login page for <em>every</em> unknown path, so a 200 doesn’t mean a file was served, and no <code>known_hosts</code> content ever came back. When I moved the panel behind the HTTPS proxy, the finding moved with it to the new port. That confirms it comes from the app’s routing, not the filesystem. I documented it and accepted it rather than hiding it.</p>
+     </section>
+     <section class="prose">
+          <div class="k">How I worked</div>
+          <h2>Changing a live server safely</h2>
+          <ul>
+            <li>I backed up every file before touching it and changed one control at a time.</li>
+            <li>After each change I checked that my SSH session still worked and the panel still loaded.</li>
+            <li>Before rescanning, I checked reachability from the scanner’s own Docker network so the rescan would really test the new rules.</li>
+          </ul>
+          <p>The sanitized configs are in my repo: <a href="https://github.com/oemarino/homelab" target="_blank" rel="noopener noreferrer">github.com/oemarino/homelab</a>.</p>
+     </section>
+     <section class="prose learned">
+          <div class="k">What I learned</div>
+          <h2>What I learned</h2>
+          <ul>
+            <li><strong>“0 Critical/High” isn’t the finish line.</strong> The Medium and Low items (cleartext logins, weak crypto, info leaks) are exactly what an attacker chains together.</li>
+            <li><strong>When you can’t fix it, contain it.</strong> Limiting a weak service to a VPN-only path is a legitimate control, as long as you write down the residual risk.</li>
+            <li><strong>Where a firewall rule lives matters.</strong> Putting the rules in <code>before.rules</code> means a careless <code>ufw allow</code> later can’t quietly undo them.</li>
+            <li><strong>Verify with evidence.</strong> Every fix was confirmed by a rescan or a direct test, and the false positive was proven, not assumed.</li>
+          </ul>
+     </section>
+
+      <nav class="post-nav" aria-label="Post">
+        <span><a href="/blog/">← All write-ups</a></span>
+        <span><a href="/blog/home-soc-with-wazuh/">Building a home SOC with Wazuh →</a></span>
+      </nav>
+    </article>
+  </main>
+</div>
+<footer>
+  <p>This site is self-hosted on my homelab server. <a href="/blog/zero-open-ports-website/">How I host it</a>.</p>
+  <p style="margin-top:.45rem">Osvaldo Marino · Cybersecurity student · Atlanta, GA</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Osvaldo Marino | Cybersecurity Student Portfolio | Atlanta, GA</title>
+<meta name="description" content="Osvaldo Marino, cybersecurity student at Georgia State University. Homelab write-ups on hardening, a Wazuh home SOC, a simulated-attack incident report, and self-hosting with zero open ports.">
+<meta name="author" content="Osvaldo Marino">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="canonical" href="https://osvaldomarino.dev/">
+</head>
+<body>
+<a class="skip" href="#about">Skip to content</a>
+<div class="wrap">
+  <header class="site">
+    <a class="mark" href="#about">osvaldomarino.dev</a>
+    <nav aria-label="Primary">
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#write-ups">Write-ups</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <header class="hero" id="about">
+      <h1>Osvaldo Marino</h1>
+      <p class="role">Cybersecurity student · Seeking Security Analyst / Security Engineer internships · Atlanta, GA</p>
+      <p class="school">Georgia State University · B.B.A. Computer Information Systems, Cybersecurity concentration · Expected Dec 2027</p>
+      <div class="intro">
+        <p>I'm a first-generation college student who builds, breaks and defends my own homelab. I used Greenbone to scan my Ubuntu server, fixed or contained every real finding, and rescanned to prove it. I run a Wazuh SIEM against an isolated attack lab and write down what it catches and what it misses. This website is served from that same server through an outbound-only Cloudflare Tunnel.</p>
+      </div>
+      <p class="links">
+        <a href="https://github.com/oemarino" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/omarino1" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </p>
+    </header>
+
+    <div class="section-head">
+      <h2 id="glance-h">Results at a glance</h2>
+      <p class="note">From my own homelab tests, Oct 2026</p>
+    </div>
+    <section class="glance-grid" aria-labelledby="glance-h">
+      <article class="card glance">
+        <h3>9 findings down to 0 real issues</h3>
+        <p>A Greenbone scan of my Ubuntu server found 9 Medium/Low issues. I fixed or contained each real one and proved the last leftover was a false positive.</p>
+      </article>
+      <article class="card glance">
+        <h3>0 of 1,007 ports open from the internet</h3>
+        <p>An outside-in check of my home connection found 0 of 1,007 IPv4 TCP ports open. The site is reached through an outbound-only Cloudflare Tunnel.</p>
+      </article>
+      <article class="card glance">
+        <h3>Caught a missed SQL injection</h3>
+        <p>Custom Wazuh rules caught 3 of 3 boolean SQL injection payloads, with 0 false matches across 29,970 normal requests from my site's logs.</p>
+      </article>
+      <article class="card glance">
+        <h3>Documented a simulated attack</h3>
+        <p>I ran a controlled, multi-stage attack against my isolated lab and wrote it up as a SOC incident report, including what the SIEM missed.</p>
+        <p class="more"><a href="/blog/simulated-attack-incident-report/">Read the incident report</a></p>
+      </article>
+    </section>
+
+    <div class="meta-row">
+      <section class="card certs" aria-labelledby="certs-h">
+        <h2 id="certs-h">Certifications &amp; training</h2>
+        <ul>
+          <li>
+            <div class="item-row"><span class="status">Completed</span> <span class="item">TryHackMe SOC Level 1</span></div>
+            <span class="detail">Finished July 2026</span>
+          </li>
+          <li>
+            <div class="item-row"><span class="status">In progress</span> <span class="item">CompTIA Security+</span></div>
+            <span class="detail">SY0-701 · Exam expected Dec 2026</span>
+          </li>
+        </ul>
+      </section>
+      <section class="card tools-card" aria-labelledby="tools-h">
+        <h2 id="tools-h">Tools I've used</h2>
+        <div class="chips">
+          <span class="chip">Wazuh</span>
+          <span class="chip">Greenbone/OpenVAS</span>
+          <span class="chip">Docker</span>
+          <span class="chip">nginx</span>
+          <span class="chip">Cloudflare Tunnel</span>
+          <span class="chip">Tailscale</span>
+          <span class="chip">ufw</span>
+          <span class="chip">Ubuntu</span>
+          <span class="chip">OpenSSH</span>
+          <span class="chip">MITRE ATT&amp;CK</span>
+          <span class="chip">Content Security Policy</span>
+        </div>
+      </section>
+    </div>
+
+    <div class="section-head" id="projects">
+      <h2 id="projects-h">Projects</h2>
+      <p class="note">Three projects from my homelab, each with a full write-up. Numbers are from tests I ran in October 2026. They are a snapshot, not live monitoring.</p>
+    </div>
+    <section class="grid" aria-labelledby="projects-h">
+      <article class="card project" id="proj-hardening">
+        <p class="meta">Vulnerability management · Oct 20, 2026</p>
+        <h3><a href="/blog/hardening-my-homelab/">Hardening my homelab: 9 findings to 0</a></h3>
+        <p>Greenbone found 6 Medium and 3 Low issues on my Ubuntu server. I fixed or contained each real one, rescanned with the same settings, and proved the last Medium was a false positive.</p>
+        <div class="tags">
+          <span class="tag">Greenbone/OpenVAS</span>
+          <span class="tag">OpenSSH</span>
+          <span class="tag">ufw</span>
+          <span class="tag">nginx</span>
+          <span class="tag">Docker</span>
+          <span class="tag">Tailscale</span>
+          <span class="tag">sysctl</span>
+        </div>
+        <p class="more"><a href="/blog/hardening-my-homelab/">Read the write-up</a></p>
+      </article>
+      <article class="card project" id="proj-soc">
+        <p class="meta">Detection &amp; SIEM · Oct 20, 2026</p>
+        <h3><a href="/blog/home-soc-with-wazuh/">Building a home SOC with Wazuh</a></h3>
+        <p>I deployed a single-node Wazuh 4.14.9 SIEM, attacked my own isolated lab, and recorded what it detected. That includes a SQL injection it missed.</p>
+        <div class="tags">
+          <span class="tag">Wazuh</span>
+          <span class="tag">Docker</span>
+          <span class="tag">DVWA</span>
+          <span class="tag">OWASP Juice Shop</span>
+          <span class="tag">nginx</span>
+          <span class="tag">MITRE ATT&amp;CK</span>
+        </div>
+        <p class="more"><a href="/blog/home-soc-with-wazuh/">Read the write-up</a></p>
+      </article>
+      <article class="card project" id="proj-hosting">
+        <p class="meta">Secure hosting · Oct 20, 2026</p>
+        <h3><a href="/blog/zero-open-ports-website/">Hardened self-hosting with a Cloudflare Tunnel</a></h3>
+        <p>This site runs on my homelab server in a locked-down nginx container. The server connects out to Cloudflare, so my router has no port forward for the site.</p>
+        <div class="tags">
+          <span class="tag">Docker</span>
+          <span class="tag">nginx-unprivileged</span>
+          <span class="tag">Cloudflare Tunnel</span>
+          <span class="tag">Content Security Policy</span>
+          <span class="tag">ufw</span>
+        </div>
+        <p class="more"><a href="/blog/zero-open-ports-website/">Read the write-up</a></p>
+      </article>
+    </section>
+
+    <div class="section-head" id="write-ups">
+      <h2 id="writeups-h">Write-ups</h2>
+      <p class="note">Hands-on write-ups from my cybersecurity homelab. Sanitized configs are on <a href="https://github.com/oemarino/homelab" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+    </div>
+    <section class="posts" aria-labelledby="writeups-h">
+      <article class="card post">
+        <h3><a href="/blog/hardening-my-homelab/">Hardening my homelab: 9 findings to 0</a></h3>
+        <p class="when">October 20, 2026</p>
+        <p>Greenbone found 6 Medium and 3 Low issues on my server. I fixed or contained every real one and proved the last one is a false positive.</p>
+      </article>
+      <article class="card post">
+        <h3><a href="/blog/home-soc-with-wazuh/">Building a home SOC with Wazuh</a></h3>
+        <p class="when">October 20, 2026</p>
+        <p>I deployed Wazuh, attacked my own isolated lab, and wrote down what the SIEM caught, including the SQL injection it missed.</p>
+      </article>
+      <article class="card post">
+        <h3><a href="/blog/zero-open-ports-website/">Hosting a hardened website from home with zero open ports</a></h3>
+        <p class="when">October 20, 2026</p>
+        <p>This site runs on my homelab server, but my router has no port forward for it. Here's the container, header and tunnel setup.</p>
+      </article>
+      <article class="card post">
+        <h3><a href="/blog/simulated-attack-incident-report/">Incident report: attacking my own lab and grading my SIEM</a></h3>
+        <p class="when">October 26, 2026</p>
+        <p>I ran a controlled recon + SQLi/XSS/LFI attack chain against my isolated lab and wrote it up like a real SOC case, gaps included.</p>
+      </article>
+    </section>
+
+    <div class="section-head" id="experience">
+      <h2 id="experience-h">Experience, education &amp; skills</h2>
+    </div>
+    <section class="card panel" aria-labelledby="experience-h">
+      <h3 class="sub" style="margin-top:0">Skills, and where I've used them</h3>
+      <table>
+        <thead><tr><th>Area</th><th>What I've done</th><th>Evidence</th></tr></thead>
+        <tbody>
+          <tr><td>Linux administration</td><td>Ubuntu Server 24.04, OpenSSH crypto hardening, ufw, sysctl, safe changes on a live server</td><td><a href="/blog/hardening-my-homelab/">Hardening write-up</a></td></tr>
+          <tr><td>Vulnerability management</td><td>Greenbone/OpenVAS scans, fixes, rescans, false-positive analysis, residual-risk notes</td><td><a href="/blog/hardening-my-homelab/">Hardening write-up</a></td></tr>
+          <tr><td>SIEM &amp; incident triage</td><td>Wazuh deployment, detection testing, file integrity monitoring, alert triage, MITRE ATT&amp;CK mapping</td><td><a href="/blog/home-soc-with-wazuh/">Wazuh write-up</a>, <a href="https://tryhackme.com/p/osvaldomarino82" target="_blank" rel="noopener noreferrer">TryHackMe SOC Level 1</a></td></tr>
+          <tr><td>Network security</td><td>Outbound-only Cloudflare Tunnel, Tailscale-only access rules, outside-in exposure checks</td><td><a href="/blog/zero-open-ports-website/">Hosting write-up</a></td></tr>
+          <tr><td>Containers &amp; web</td><td>Docker, nginx, least-privilege containers, CSP and security headers, DVWA/Juice Shop lab</td><td><a href="https://github.com/oemarino/homelab" target="_blank" rel="noopener noreferrer">homelab repo</a></td></tr>
+        </tbody>
+      </table>
+      <div class="two">
+        <div>
+          <h3 class="sub">Experience</h3>
+          <ul class="plain">
+            <li><strong>Cybersecurity homelab</strong>, self-directed · 2026 – Present<br>Build, harden and monitor the Ubuntu server that hosts this site. See <a href="#projects">Projects</a>.</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="sub">Education</h3>
+          <p>Georgia State University, J. Mack Robinson College of Business · Atlanta, GA<br>
+          B.B.A., Computer Information Systems · Cybersecurity concentration · Expected Dec 2027<br>
+          Dean's List (7 semesters) · HOPE Scholarship · First-generation college student</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card panel" id="server" aria-labelledby="server-h">
+      <h2 id="server-h">This site is self-hosted on my homelab</h2>
+      <p>My own server, at home. No hosting company or cloud provider. I set it up, secure it and monitor it myself.</p>
+      <div class="two">
+        <dl>
+          <dt>Status</dt><dd>Online. It served the page you're reading now.</dd>
+          <dt>Operating system</dt><dd>Ubuntu Server 24.04 LTS</dd>
+          <dt>Hardware</dt><dd>Intel Core i5-6500T (4 cores) · 16 GB RAM</dd>
+          <dt>Monitoring</dt><dd>Wazuh SIEM agent on the server</dd>
+        </dl>
+        <dl>
+          <dt>Web server</dt><dd>nginx in a locked-down Docker container (non-root, read-only)</dd>
+          <dt>Delivery</dt><dd>Cloudflare Tunnel, outbound only. No port forward for the site on my router</dd>
+          <dt>Exposure check</dt><dd>0 of 1,007 IPv4 TCP ports open in an outside-in check Oct 20, 2026</dd>
+        </dl>
+      </div>
+      <p style="margin-top:1rem">The same server also runs my Wazuh SIEM and an isolated practice lab. <a href="/blog/zero-open-ports-website/">Read how I host this site</a>.</p>
+    </section>
+
+    <section class="card panel" id="contact" aria-labelledby="contact-h" style="margin-bottom:0">
+      <h2 id="contact-h">Contact</h2>
+      <ul class="contact">
+        <li>GitHub: <a href="https://github.com/oemarino" target="_blank" rel="noopener noreferrer">github.com/oemarino</a></li>
+        <li>LinkedIn: <a href="https://www.linkedin.com/in/omarino1" target="_blank" rel="noopener noreferrer">linkedin.com/in/omarino1</a></li>
+      </ul>
+    </section>
+  </main>
+</div>
+<footer>
+  <p>Osvaldo Marino · Cybersecurity student · Atlanta, GA</p>
+</footer>
+</body>
+</html>

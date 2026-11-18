@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Write-ups | Osvaldo Marino</title>
+<meta name="description" content="Hands-on cybersecurity write-ups by Osvaldo Marino: Greenbone hardening, a Wazuh home SOC, a simulated-attack incident report, and self-hosting with zero open ports.">
+<meta name="author" content="Osvaldo Marino">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="canonical" href="https://osvaldomarino.dev/blog/">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<div class="wrap">
+  <header class="site">
+    <a class="mark" href="/">osvaldomarino.dev</a>
+    <nav aria-label="Primary">
+      <a href="/">About</a>
+      <a href="/#projects">Projects</a>
+      <a href="/#experience">Experience</a>
+      <a href="/blog/">Write-ups</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+  </header>
+  <main id="content">
+    <div class="section-head" style="margin-top:.2rem">
+      <h1 id="writeups-h" style="font-size:1.8rem;margin:0 0 .4rem">Write-ups</h1>
+      <p class="note">Hands-on write-ups from my cybersecurity homelab. Sanitized configs are on <a href="https://github.com/oemarino/homelab" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+    </div>
+    <section class="posts" aria-labelledby="writeups-h">
+      <article class="card post">
+        <h3><a href="/blog/hardening-my-homelab/">Hardening my homelab: 9 findings to 0</a></h3>
+        <p class="when">October 20, 2026</p>
+        <p>Greenbone found 6 Medium and 3 Low issues on my server. I fixed or contained every real one and proved the last one is a false positive.</p>
+      </article>
+      <article class="card post">
+        <h3><a href="/blog/home-soc-with-wazuh/">Building a home SOC with Wazuh</a></h3>
+        <p class="when">October 20, 2026</p>
+        <p>I deployed Wazuh, attacked my own isolated lab, and wrote down what the SIEM caught, including the SQL injection it missed.</p>
+      </article>
+      <article class="card post">
+        <h3><a href="/blog/zero-open-ports-website/">Hosting a hardened website from home with zero open ports</a></h3>
+        <p class="when">October 20, 2026</p>
+        <p>This site runs on my homelab server, but my router has no port forward for it. Here&#x27;s the container, header and tunnel setup.</p>
+      </article>
+      <article class="card post">
+        <h3><a href="/blog/simulated-attack-incident-report/">Incident report: attacking my own lab and grading my SIEM</a></h3>
+        <p class="when">October 26, 2026</p>
+        <p>I ran a controlled recon + SQLi/XSS/LFI attack chain against my isolated lab and wrote it up like a real SOC case, gaps included.</p>
+      </article>
+    </section>
+    <p class="site-note" style="margin-top:1.2rem;padding:0 .2rem">This site is self-hosted on my homelab server. <a href="/blog/zero-open-ports-website/">How I host it</a>.</p>
+  </main>
+</div>
+<footer>
+  <p>This site is self-hosted on my homelab server. <a href="/blog/zero-open-ports-website/">How I host it</a>.</p>
+  <p style="margin-top:.45rem">Osvaldo Marino · Cybersecurity student · Atlanta, GA</p>
+</footer>
+</body>
+</html>

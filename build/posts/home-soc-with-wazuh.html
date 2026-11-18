@@ -1,0 +1,58 @@
+<header>
+      <div class="meta"><span class="pill">Detection &amp; SIEM</span><span><time datetime="2026-10-20">October 20, 2026</time></span><span>· Osvaldo Marino</span><span class="hist">Results are a snapshot from tests on Oct 20, 2026</span></div>
+      <h1>Building a home SOC with Wazuh</h1>
+      <p class="lead">I wanted to see attacks from the defender’s side, so I built a small SOC at home: a Wazuh SIEM watching my server, plus an isolated, deliberately vulnerable lab to attack. Then I checked what it caught and what it missed.</p>
+     </header>
+     <section class="prose">
+          <div class="k">The build</div>
+          <h2>Wazuh 4.14.9 plus an isolated attack lab</h2>
+          <ul>
+            <li><strong>SIEM:</strong> single-node Wazuh 4.14.9 (manager, indexer, dashboard) in Docker, with my homelab server enrolled as a monitored endpoint.</li>
+            <li><strong>Telemetry:</strong> SSH/sudo/PAM auth logs, ufw firewall logs, syslog, Docker engine events, <strong>real-time file integrity monitoring</strong> on <code>/etc</code>, the CIS Ubuntu 24.04 benchmark, and the lab’s web access logs.</li>
+            <li><strong>Attack lab:</strong> DVWA and OWASP Juice Shop on a Docker <code>internal</code> network with no internet access (an egress test from the DVWA container was blocked). Only an nginx proxy is reachable, and only from the server or over Tailscale. The lab is off unless I start it with <code>lab up</code>.</li>
+          </ul>
+     </section>
+     <section class="prose">
+          <div class="k">Hardening the SIEM itself</div>
+          <h2>A security tool shouldn’t be the weak spot</h2>
+          <ul>
+            <li>Every published port is bound to specific interfaces (localhost, LAN, Tailscale) and never <code>0.0.0.0</code>, because Docker-published ports bypass ufw. I verified it with <code>ss</code>.</li>
+            <li>The indexer and the Wazuh API are localhost-only, and the unused syslog port isn’t published at all.</li>
+            <li>I replaced all the default demo passwords with random 26-character secrets <strong>before first boot</strong> and confirmed the old defaults are rejected (HTTP 401).</li>
+          </ul>
+     </section>
+     <section class="prose">
+          <div class="k">Results</div>
+          <h2>What Wazuh detected</h2>
+          <div class="tbl"><table>
+            <thead><tr><th>Test</th><th>Result</th><th>Rules</th></tr></thead>
+            <tbody>
+              <tr><td>6 failed SSH logins as a nonexistent user</td><td class="good">Detected: 11 alerts + 1 brute-force correlation (level 10)</td><td><code>5710</code> → <code>5712</code></td></tr>
+              <tr><td>Create, modify and delete a test file in <code>/etc</code></td><td class="good">Detected within seconds</td><td><code>554</code> <code>550</code> <code>553</code></td></tr>
+              <tr><td>SQLi: <code>UNION SELECT user,password FROM users</code></td><td class="good">Detected (attack succeeded)</td><td><code>31106</code></td></tr>
+              <tr><td>SQLi: <code>1' OR '1'='1</code></td><td class="bad">Missed (attack succeeded, no alert)</td><td>none</td></tr>
+              <tr><td>CIS Ubuntu 24.04 benchmark</td><td class="warn">50% on the first scan</td><td><code>19003</code></td></tr>
+            </tbody>
+          </table></div>
+     </section>
+     <section class="prose">
+          <div class="k">Unplanned catch</div>
+          <h2>Triage on real noise</h2>
+          <p>While I was setting things up, a Greenbone rescan of the server was running. Its default-credential SSH checks produced <strong>735 rule 5710 alerts</strong> and <strong>1 level-10 brute-force alert</strong> within about a minute. The SIEM traced the activity to the scanner’s container, so I could confirm it was my own authorized scan and not an attack. That’s the everyday triage an analyst does: separating expected activity from real threats.</p>
+     </section>
+     <section class="prose">
+          <div class="k">The honest miss</div>
+          <h2>Signatures have gaps</h2>
+          <p>Both SQL injections worked against DVWA. Wazuh caught the <code>UNION</code>-based one with rule 31106 (“A web attack returned code 200”) but raised nothing for the boolean <code>OR '1'='1'</code> variant, even though it returned every user row. My next steps are a custom Wazuh rule for that pattern, or a WAF like ModSecurity with the OWASP Core Rule Set in front of the lab.</p>
+          <p>Configs (with secrets replaced by placeholders): <a href="https://github.com/oemarino/homelab" target="_blank" rel="noopener noreferrer">github.com/oemarino/homelab</a>.</p>
+     </section>
+     <section class="prose learned">
+          <div class="k">What I learned</div>
+          <h2>What I learned</h2>
+          <ul>
+            <li><strong>Test your detections.</strong> I only know about the SQLi gap because I attacked my own lab and checked for the alert.</li>
+            <li><strong>Correlation beats volume.</strong> One level-10 brute-force alert (5712) is more useful than hundreds of individual failed logins.</li>
+            <li><strong>Context makes triage fast.</strong> Knowing which container generated the traffic turned 735 alerts into a 1-minute investigation.</li>
+            <li><strong>Isolation first.</strong> Vulnerable apps belong on a network with no internet egress, switched off when I’m not using them.</li>
+          </ul>
+     </section>
