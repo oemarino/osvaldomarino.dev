@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Osvaldo Marino | Cybersecurity Student Portfolio | Atlanta, GA</title>
+<meta name="description" content="{{META_DESC}}">
+<meta name="author" content="Osvaldo Marino">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0d4790" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a1424" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://osvaldomarino.dev/">
+<meta property="og:type" content="profile">
+<meta property="profile:first_name" content="Osvaldo">
+<meta property="profile:last_name" content="Marino">
+<meta property="og:site_name" content="Osvaldo Marino">
+<meta property="og:title" content="Osvaldo Marino | Cybersecurity Portfolio">
+<meta property="og:description" content="{{OG_DESC}}">
+<meta property="og:url" content="https://osvaldomarino.dev/">
+<meta property="og:image" content="https://osvaldomarino.dev/img/og-2026-10c.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="osvaldomarino.dev">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Osvaldo Marino | Cybersecurity Portfolio">
+<meta name="twitter:description" content="{{OG_DESC}}">
+<meta name="twitter:image" content="https://osvaldomarino.dev/img/og-2026-10c.jpg">
+<meta name="twitter:image:alt" content="osvaldomarino.dev">
+{{FAVICON}}
+<link rel="preload" href="/fonts/opensans.woff2" as="font" type="font/woff2" crossorigin>
+<script src="/boot.js?v={{V_BOOT}}"></script>
+<script src="/win7.js?v={{V}}" defer></script>
+{{JSONLD}}
+<style>
+@font-face{font-family:'Open Sans';src:url(/fonts/opensans.woff2) format('woff2');font-weight:400 700;font-display:swap}
+@font-face{font-family:Inconsolata;src:url(/fonts/inconsolata.woff2) format('woff2');font-weight:400 700;font-display:swap}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+html{background:#0d4790;-webkit-text-size-adjust:100%}
+body{font:12px/1.4 'Open Sans','Segoe UI',system-ui,sans-serif;color:#1e1e1e;overflow:hidden;position:relative}
+a{color:#0058b3;text-decoration:none}a:hover{text-decoration:underline}
+main p a,main li a,main td a,main dd a,.bal p a{text-decoration:underline;text-underline-offset:2px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid #fff;outline-offset:2px;box-shadow:0 0 0 4px #0b2f66}
+.cli :focus-visible,.sm .lc :focus-visible{outline:2px solid #0b3f8a;outline-offset:2px;box-shadow:none}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:-999px;top:6px;z-index:30000;background:#fff;color:#000;padding:8px 12px;border-radius:4px}.skip:focus{left:6px}
+/* wallpaper */
+.wall{position:absolute;inset:0;pointer-events:none;overflow:hidden;background:radial-gradient(70% 60% at 50% 42%,#3b9be0 0,#1d6fc0 35%,#0d4790 65%,#062a5c 100%)}
+html[data-wall="matrix"] .wall{background:radial-gradient(70% 60% at 50% 42%,#3fbf5a 0,#1c8a3a 35%,#0d5a24 65%,#03270f 100%)}
+html[data-wall="sunset"] .wall{background:radial-gradient(70% 60% at 50% 42%,#ffb35c 0,#ea6a2f 35%,#a8325a 65%,#45163f 100%)}
+html[data-wall="ice"] .wall{background:radial-gradient(70% 60% at 50% 42%,#bff1ff 0,#5cc4ec 35%,#2185c4 65%,#0b4a7e 100%)}
+.wall svg{position:absolute;inset:0;width:100%;height:100%}
+.bokeh{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.35),rgba(255,255,255,0) 70%)}
+/* desktop icons */
+.icons{position:absolute;left:6px;top:8px;bottom:48px;display:grid;grid-template-rows:repeat(auto-fill,80px);grid-auto-columns:86px;grid-auto-flow:column;align-content:start;justify-content:start;gap:2px;z-index:1}
+.ic{width:86px;height:80px;overflow:hidden;padding:3px 2px 2px;text-align:center;color:#fff;text-shadow:0 1px 2px #000,0 0 4px rgba(0,0,0,.8);border:1px solid transparent;border-radius:3px;cursor:pointer;line-height:1.25;background:none;font-size:12px}
+.ic:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.35)}
+.g{width:40px;height:38px;margin:0 auto 4px;position:relative;display:block}
+.i-pc::before{content:"";position:absolute;left:3px;top:2px;width:34px;height:25px;border-radius:3px;background:linear-gradient(160deg,#9fe0ff,#1b7bd6 55%,#0b3f8a);border:3px solid #2b2f36;box-shadow:0 1px 2px rgba(0,0,0,.5)}
+.i-pc::after{content:"";position:absolute;left:12px;top:29px;width:16px;height:6px;background:linear-gradient(#8a9099,#4c525b);border-radius:1px 1px 4px 4px}
+.i-fold::before{content:"";position:absolute;left:2px;top:4px;width:16px;height:8px;border-radius:3px 3px 0 0;background:#d9a92a}
+.i-fold::after{content:"";position:absolute;left:2px;top:9px;width:36px;height:26px;border-radius:2px 2px 3px 3px;background:linear-gradient(#ffe89a,#f4c443 55%,#e0a520);box-shadow:inset 0 1px rgba(255,255,255,.8),0 1px 2px rgba(0,0,0,.4)}
+.i-cmd{border-radius:3px;background:#0c0c0c;border:2px solid #b9c6d6;box-shadow:inset 0 5px #5b7fae,0 1px 2px rgba(0,0,0,.5);color:#ddd;font:700 12px/40px Inconsolata,monospace;text-align:left;padding-left:4px;text-shadow:none}
+.i-doc::before{content:"";position:absolute;left:7px;top:1px;width:26px;height:35px;border-radius:2px;background:linear-gradient(#fff,#e6eef8);border:1px solid #7b8ea8;box-shadow:0 1px 2px rgba(0,0,0,.4)}
+.i-doc::after{content:"";position:absolute;left:11px;top:8px;width:18px;height:20px;background:repeating-linear-gradient(#2f6fc9 0 2px,transparent 2px 5px)}
+.i-cv::before{content:"";position:absolute;left:7px;top:1px;width:26px;height:35px;border-radius:2px;background:linear-gradient(#fff,#e6eef8);border:1px solid #7b8ea8;box-shadow:0 1px 2px rgba(0,0,0,.4)}
+.i-cv::after{content:"";position:absolute;left:11px;top:6px;width:10px;height:10px;border-radius:50%;background:#3d7fd1;box-shadow:0 13px 0 -2px #9db3cf,6px 13px 0 -2px #9db3cf,0 19px 0 -2px #9db3cf,6px 19px 0 -2px #9db3cf,10px 0 0 -2px #9db3cf,14px 4px 0 -3px #9db3cf}
+.i-net::before{content:"";position:absolute;left:4px;top:2px;width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d6f4ff,#3fa4ef 40%,#0b4ea6 80%);box-shadow:0 1px 3px rgba(0,0,0,.5)}
+.i-net::after{content:"";position:absolute;left:11px;top:3px;width:18px;height:30px;border:2px solid rgba(255,255,255,.55);border-radius:50%}
+.i-gh,.i-in{border-radius:6px;color:#fff;font:700 15px/36px 'Open Sans',sans-serif;text-align:center;text-shadow:none;width:36px;height:36px;box-shadow:0 1px 3px rgba(0,0,0,.5),inset 0 1px rgba(255,255,255,.3)}
+.i-gh{background:linear-gradient(#3a3f47,#16191d);border-radius:50%;font-size:13px}
+.i-in{background:linear-gradient(#2d8fd6,#0a5fa8);font-size:17px}
+.i-sec::before{content:"";position:absolute;left:7px;top:2px;width:26px;height:32px;background:linear-gradient(90deg,#1c8a3a 50%,#2fb352 50%);clip-path:polygon(50% 0,100% 15%,100% 55%,50% 100%,0 55%,0 15%)}
+.i-sec::after{content:"";position:absolute;left:16px;top:9px;width:7px;height:13px;border-right:3px solid #fff;border-bottom:3px solid #fff;transform:rotate(40deg)}
+.i-mail::before{content:"";position:absolute;left:3px;top:7px;width:34px;height:24px;border-radius:2px;background:linear-gradient(#fff,#e2eaf4);border:1px solid #6d7f99;box-shadow:0 1px 2px rgba(0,0,0,.45)}
+.i-mail::after{content:"";position:absolute;left:9px;top:2px;width:22px;height:22px;border-right:1px solid #6d7f99;border-bottom:1px solid #6d7f99;transform:rotate(45deg);background:linear-gradient(135deg,transparent 50%,#d6e2f0 50%)}
+.i-srv::before{content:"";position:absolute;left:10px;top:1px;width:20px;height:35px;border-radius:2px;background:linear-gradient(90deg,#2f343c,#5a616c 45%,#3a3f47);border:1px solid #1b1e23;box-shadow:inset 0 1px rgba(255,255,255,.25),0 1px 3px rgba(0,0,0,.55)}
+.i-srv::after{content:"";position:absolute;left:13px;top:5px;width:14px;height:3px;background:#8a929e;box-shadow:0 5px #8a929e,0 10px #8a929e,9px 22px 0 -0.5px #3ddc60,9px 22px 4px 0 rgba(61,220,96,.7)}
+/* aero glass windows */
+.win{position:absolute;display:flex;flex-direction:column;padding:0 7px 7px;border-radius:7px;border:1px solid rgba(0,0,0,.65);
+ background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,.08) 28px,rgba(160,195,230,.18)),rgba(110,150,200,.42);
+ -webkit-backdrop-filter:blur(9px) saturate(1.2);backdrop-filter:blur(9px) saturate(1.2);
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.45),0 6px 26px rgba(0,0,0,.5)}
+.win:not(.focus){background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.06) 28px),rgba(160,180,205,.35);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35),0 3px 14px rgba(0,0,0,.35)}
+.win.hid{display:none}
+.tb{height:30px;flex:none;display:flex;align-items:flex-start;gap:6px;cursor:move;padding-top:6px;touch-action:none}
+.tb .mi{width:16px;height:16px;flex:none;transform:scale(.42);transform-origin:left top;margin:0}
+.tb .t{flex:1;min-width:0;font-size:12.5px;color:#000;text-shadow:0 0 8px #fff,0 0 4px #fff,0 0 2px #fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cap{display:flex;margin-top:-7px;align-self:flex-start;flex:none}
+.cap button{height:20px;width:28px;border:1px solid rgba(0,0,0,.55);border-top:0;background:linear-gradient(rgba(255,255,255,.6),rgba(255,255,255,.2) 48%,rgba(255,255,255,.05) 52%,rgba(255,255,255,.25));color:#fff;font:700 11px/16px 'Open Sans',sans-serif;text-shadow:0 0 2px #000,0 0 3px #000;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.cap button:first-child{border-radius:0 0 0 4px}
+.cap button+button{border-left:0}
+.cap button.x{width:46px;border-radius:0 0 4px 0;background:linear-gradient(#eaa48f,#d7563c 48%,#c13a1d 52%,#d2654a);font-size:13px}
+.cap button.x:hover{background:linear-gradient(#f6b9a3,#e86a4f 48%,#d84a28 52%,#e9876a)}
+.cap button:not(.x):hover{background:linear-gradient(#bfe6ff,#78c1f0 48%,#3e9ee0 52%,#8fd3ff)}
+.cli{flex:1;display:flex;flex-direction:column;background:#fff;border:1px solid rgba(0,0,0,.45);min-height:0;overflow:hidden}
+.sbar{display:flex;gap:14px;padding:2px 8px;background:linear-gradient(#f1f5fb,#dde6f1);border-top:1px solid #b6c6db;font-size:11px;color:#2d3e55;flex:none}
+.sbar span:first-child{flex:1}
+/* WordPad */
+.rtabs{display:flex;gap:2px;background:linear-gradient(#f6f9fd,#dfe9f5);padding:2px 4px 0;border-bottom:1px solid #b6c6db;flex:none}
+.rtabs span{padding:2px 12px;border:1px solid transparent;border-bottom:0;border-radius:3px 3px 0 0}
+.rtabs span.f{background:#2e6bc6;color:#fff}.rtabs span.on{background:#fbfdff;border-color:#b6c6db;margin-bottom:-1px}
+.ruler{height:13px;background:repeating-linear-gradient(90deg,transparent 0 9px,#9aa7b8 9px 10px) 0 8px/100% 5px no-repeat,#fff;border-bottom:1px solid #d0d8e4;flex:none}
+.docwrap{flex:1;background:#abb9cd;padding:6px 8px 0;overflow:hidden;min-height:0}
+.page{background:#fff;height:100%;overflow:auto;padding:16px 22px 18px;box-shadow:0 0 4px rgba(0,0,0,.35);font-size:13px;line-height:1.5;scrollbar-width:thin;color:#1f2328}
+.page .av{float:right;width:80px;height:80px;object-fit:cover;object-position:50% 20%;margin:0 0 6px 12px;border:1px solid #c0c9d6;padding:2px;background:#fff;border-radius:3px}
+.page h1{font-size:24px;font-weight:700;color:#17365d;line-height:1.15}
+.page .role{color:#1f497d;font-size:14.5px;font-weight:600;margin:3px 0 2px}
+.page .facts{color:#4a5568;font-size:12.5px}
+.page h2{font-size:14px;color:#1f497d;border-bottom:1px solid #b8cce4;margin:14px 0 5px;font-weight:700}
+.page h3{font-size:13px;color:#17365d;margin:8px 0 2px}
+.page p+p{margin-top:7px}
+.page ul{list-style:none}
+.page li{margin:3px 0}
+.page .m{color:#4a5568}
+.page .flash{animation:flash 1.6s ease 2}
+.cta{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 12px;clear:left}
+.btn7{display:inline-flex;align-items:center;gap:5px;padding:3px 12px;border:1px solid #707070;border-radius:3px;background:linear-gradient(#f2f2f2,#ebebeb 45%,#ddd 50%,#cfcfcf);color:#000;font-size:12.5px;text-decoration:none;min-height:28px;cursor:pointer}
+.btn7:hover{border-color:#3c7fb1;background:linear-gradient(#eaf6fd,#d9f0fc 45%,#bee6fd 50%,#a7d9f5);text-decoration:none}
+.btn7.pri{border-color:#1d4f86;color:#fff;font-weight:600;text-shadow:0 0 2px rgba(0,0,0,.6);background:linear-gradient(#5f9fe0,#2a74c4 45%,#1b5fab 50%,#2a72c0)}
+.btn7.pri:hover{background:linear-gradient(#7db3ea,#3d86d4 45%,#2a6fbd 50%,#3b84d2)}
+.btn7 .miss{font-size:10.5px;font-weight:700;background:#fff3b0;color:#6b4e00;border:1px solid #c9a227;border-radius:2px;padding:0 4px;text-shadow:none}
+.glance{margin:10px 0 4px;padding:8px 12px;border:1px solid #cfdcec;border-radius:3px;background:#f5f9fe}
+.glance .gh{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-weight:600;color:#17365d;margin-bottom:2px}
+.glance li{padding-left:16px;position:relative}
+.glance li::before{content:"";position:absolute;left:2px;top:.55em;width:7px;height:7px;border-radius:50%;background:#1c8a3a}
+.badge{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.02em;border-radius:2px;padding:0 5px;border:1px solid;vertical-align:1px;white-space:nowrap}
+.b-hist{color:#5a3e00;background:#fff6d6;border-color:#d6b85a}
+.b-done{color:#0f5d24;background:#e3f6e7;border-color:#7cc38c}
+.b-prog{color:#0b3f8a;background:#e5f0fd;border-color:#86aee0}
+.b-live{color:#0f5d24;background:#e3f6e7;border-color:#7cc38c}
+.b-sim{color:#4b2a7a;background:#f1e9fb;border-color:#b79be0}
+@keyframes flash{50%{background:#fff3b0}}
+/* skills table */
+.sk{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px}
+.sk th{text-align:left;font-weight:600;color:#4c607a;padding:3px 6px;border-bottom:1px solid #d5e0ee;background:linear-gradient(#fff,#f1f5fa)}
+.sk td{padding:4px 6px;border-bottom:1px solid #edf1f6;vertical-align:top}
+.sk td:first-child{font-weight:600;color:#17365d;white-space:nowrap}
+/* explorer (projects) */
+.nav{display:flex;gap:6px;align-items:center;padding:1px 0 6px;flex:none}
+.nb{width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 50% 30%,#bfe2ff,#2f7fd0 60%,#14509a);border:1px solid #153f72;color:#fff;font:700 12px/22px 'Open Sans',sans-serif;text-align:center;flex:none}
+.nb.d{filter:grayscale(1) opacity(.6)}
+.crumb{flex:1;min-width:0;display:flex;align-items:center;height:24px;background:rgba(255,255,255,.94);border:1px solid rgba(0,0,0,.45);border-radius:2px;font-size:12px;overflow:hidden;white-space:nowrap}
+.crumb span{padding:0 6px}
+.crumb span.ar{padding:0 2px;color:#555;font-size:9px}
+.cmdbar{display:flex;gap:14px;padding:4px 10px;background:linear-gradient(#f5f9fd,#dde8f5);border-bottom:1px solid #b9c9de;flex:none;color:#1e395b}
+.cmdbar a{color:#1e395b}
+.pv{flex:1;overflow:auto;min-height:0;padding:10px 12px 12px;scrollbar-width:thin}
+.pv>p{color:#33404f;font-size:12.5px;margin-bottom:8px}
+.case{border:1px solid #d3deec;border-radius:4px;padding:10px 12px;margin-bottom:10px;background:linear-gradient(#fff,#f7fafd)}
+.case .hd{display:flex;gap:10px;align-items:flex-start}
+.case .hd .g{margin:0;flex:none;width:40px}
+.case h3{font-size:14.5px;color:#0b3f8a;line-height:1.3}
+.case h3 a{color:inherit}
+.case .meta{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;font-size:11.5px;color:#4a5568;margin-top:2px}
+.case .tag{color:#1e3287;background:linear-gradient(#e5f1fd,#cce4fa);border:1px solid #84acdd;border-radius:2px;padding:0 6px}
+.case .res{margin-left:auto;text-align:right;flex:none;font-size:11px;color:#4a5568;line-height:1.2}
+.case .res b{display:block;font-size:17px;color:#13801f}
+.case .one{margin:6px 0 4px;font-size:12.5px;color:#1f2328}
+.case .tools{font-size:11.5px;color:#4a5568}
+.case details{margin-top:6px}
+.case summary{cursor:pointer;color:#0058b3;font-size:12.5px;padding:2px 0;display:flex;align-items:center;gap:4px}
+.case dl{display:grid;grid-template-columns:86px 1fr;gap:4px 10px;font-size:12.5px;margin-top:6px}
+.case dt{color:#4a5568;font-weight:600}
+.case dd ul{list-style:disc;padding-left:16px}
+.case .links{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.web::before{content:"";position:absolute;left:8px;top:2px;width:28px;height:36px;border-radius:2px;background:linear-gradient(#fff,#e8eef6);border:1px solid #8395ad;box-shadow:0 1px 2px rgba(0,0,0,.35)}
+.web::after{content:"";position:absolute;left:13px;top:13px;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d6f4ff,#3fa4ef 45%,#0b4ea6 85%)}
+/* default desktop positions (win7.js refines these to fit the screen) */
+.wp{left:var(--ax,100px);top:10px;width:var(--aw,46vw);height:var(--wh,calc(100% - 60px))}
+.ex{left:var(--px,50vw);top:10px;width:var(--pw,45vw);height:var(--wh,calc(100% - 60px))}
+.cv{left:180px;top:40px;width:600px;height:560px}
+.sv{left:260px;top:60px;width:560px;height:500px}
+.cm{left:340px;top:80px;width:620px;height:420px}
+/* command prompt */
+.chips{display:none;align-items:center;gap:5px;flex-wrap:wrap;padding:4px 6px;background:linear-gradient(#f5f9fd,#dde8f5);border-bottom:1px solid #b9c9de;flex:none;font-size:11.5px;color:#1e395b}
+html.js .chips{display:flex}
+.chips b{font-weight:600;margin-right:2px}
+.chip{padding:1px 9px;border:1px solid #707070;border-radius:3px;background:linear-gradient(#f2f2f2,#ebebeb 45%,#dddddd 50%,#cfcfcf);cursor:pointer;font-size:11.5px;color:#000;font-family:Inconsolata,monospace}
+.chip:hover{border-color:#3c7fb1;background:linear-gradient(#eaf6fd,#d9f0fc 45%,#bee6fd 50%,#a7d9f5)}
+.simnote{padding:3px 8px;background:#f1e9fb;border-bottom:1px solid #d8c8ef;color:#3b2063;font-size:11.5px;flex:none}
+.scr{flex:1;background:#0c0c0c;color:#c8c8c8;font:14.5px/1.25 Inconsolata,monospace;padding:6px 8px;overflow:auto;white-space:pre-wrap;word-break:break-word;cursor:text;scrollbar-width:thin;scrollbar-color:#555 #0c0c0c;min-height:0}
+.scr .w{color:#fff}.scr .y{color:#f9f1a5}.scr .gr{color:#3ddc3d}.scr .cy{color:#61d6d6}.scr .r{color:#ff7b72}.scr .m{color:#9a9a9a}.scr .b{font-weight:700}
+.scr a{color:#61d6d6;text-decoration:underline}
+.pl{display:none}
+html.js .pl{display:flex;align-items:baseline}
+.pl input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#fff;font:inherit;caret-color:#c0c0c0;padding:0}
+.pl input::placeholder{color:#8a8a8a}
+.matrix-rain{position:fixed;inset:0;z-index:30000;transition:opacity .6s;cursor:pointer}.matrix-rain.out{opacity:0}
+/* gadgets */
+.gad{position:absolute;right:14px;z-index:2;color:#fff;display:none}
+@media (min-width:1560px) and (min-height:760px){.gad{display:block}}
+.clock{top:14px;width:124px;height:124px;border-radius:50%;background:radial-gradient(circle at 50% 35%,#fff 0,#e9eef5 55%,#b9c6d6 100%);box-shadow:0 0 0 5px rgba(40,50,70,.85),0 0 0 6px rgba(255,255,255,.5),0 8px 20px rgba(0,0,0,.5);right:42px}
+.clock i{position:absolute;left:50%;top:50%;transform-origin:50% 100%;border-radius:3px}
+.clock .h{width:5px;height:30px;margin:-30px 0 0 -2.5px;background:#222}
+.clock .mn{width:3px;height:43px;margin:-43px 0 0 -1.5px;background:#333}
+.clock .s{width:1.5px;height:48px;margin:-48px 0 0 -.75px;background:#d0342c}
+.clock b{position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px;border-radius:50%;background:#222}
+.clock .tick{position:absolute;inset:8px;border-radius:50%;background:repeating-conic-gradient(#555 0 1.2deg,transparent 1.2deg 30deg);-webkit-mask:radial-gradient(circle,transparent 46px,#000 47px);mask:radial-gradient(circle,transparent 46px,#000 47px)}
+.clock .lbl{position:absolute;left:0;right:0;top:86px;text-align:center;font-size:9px;color:#445;letter-spacing:.08em}
+.stat{top:150px;width:196px;border-radius:8px;padding:10px 12px 12px;background:linear-gradient(180deg,rgba(30,45,70,.9),rgba(10,20,40,.9));border:1px solid rgba(255,255,255,.35);box-shadow:inset 0 1px rgba(255,255,255,.35),0 6px 18px rgba(0,0,0,.45)}
+.stat h2{font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:2px}
+.stat h2 .g{width:16px;height:16px;margin:0;transform:scale(.42);transform-origin:left top}
+.stat .when{font-size:10.5px;color:#c9d8ee;margin-bottom:5px}
+.stat .r{display:flex;justify-content:space-between;padding:3px 0;border-top:1px solid rgba(255,255,255,.14);font-size:11px;gap:6px}
+.stat .r span{color:#c3d5ee}.stat .r b{font-weight:600;color:#8ef29f;text-align:right}
+/* balloons */
+.bal{position:absolute;right:66px;bottom:52px;width:340px;z-index:8000;background:linear-gradient(#fff,#e6edf7);border:1px solid #6d7a8c;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.45);padding:10px 12px;display:none}
+html.js .bal{display:block}
+html.js .bal.hid{display:none}
+.bal::after{content:"";position:absolute;right:46px;bottom:-9px;width:16px;height:16px;background:#e6edf7;border-right:1px solid #6d7a8c;border-bottom:1px solid #6d7a8c;transform:rotate(45deg)}
+.bal .hd{display:flex;align-items:center;gap:8px;font-weight:700;color:#1e3287;font-size:12.5px}
+.bal .sh{width:20px;height:22px;background:linear-gradient(90deg,#c62828 50%,#e53935 50%);clip-path:polygon(50% 0,100% 15%,100% 55%,50% 100%,0 55%,0 15%);color:#fff;font:800 12px/20px 'Open Sans',sans-serif;text-align:center;flex:none}
+.bal .sh.ok{background:linear-gradient(90deg,#1c8a3a 50%,#2fb352 50%);font-size:11px}
+.bal .x{margin-left:auto;font-weight:400;color:#444;padding:0 6px;border-radius:2px;border:0;background:none;cursor:pointer;min-height:24px}.bal .x:hover{background:#d7563c;color:#fff}
+.bal p{margin:5px 0 0 28px;color:#222;font-size:11.5px}
+.bal .go{margin:6px 0 0 28px;border:0;background:none;color:#0058b3;cursor:pointer;font-size:11.5px;padding:0;min-height:24px}.bal .go:hover{text-decoration:underline}
+/* System panel */
+.sysw{flex:1;display:flex;min-height:0}
+.sysnav{width:150px;flex:none;padding:12px 8px;background:linear-gradient(90deg,#e9f1fb,#d5e4f5);border-right:1px solid #c5d5e8;font-size:11.5px;display:flex;flex-direction:column;gap:6px}
+.sysnav .h{color:#1e3287;font-weight:600;margin-bottom:2px}
+.sysnav a{color:#0b4f9c}
+.sysb{flex:1;overflow:auto;padding:12px 16px 14px;min-height:0;scrollbar-width:thin;font-size:12px}
+.sysb h2{font-size:15px;font-weight:400;color:#1e3287;margin-bottom:8px}
+.sysb h3{font-size:12px;font-weight:400;color:#1e3287;margin:10px 0 4px;display:flex;align-items:center;gap:8px}
+.sysb h3::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#c9d7e8,transparent)}
+.sysb .ed{display:flex;gap:14px;align-items:center}
+.sysb .ed p{flex:1}
+.sysb .ed .big{font-size:20px;color:#1e3287;line-height:1.2;font-weight:300}
+.sysb .ed .g{transform:scale(1.3);margin:6px 14px 6px 4px;flex:none}
+.kv{display:grid;grid-template-columns:118px 1fr;gap:3px 10px;font-size:12px}
+.kv dt{color:#4a5568}.kv dd{color:#111}
+.sysb .on{color:#13801f;font-weight:600}
+.sysb .note{margin-top:10px;padding:6px 9px;background:#f4f8fd;border:1px solid #d5e0ee;border-radius:3px;font-size:12px;color:#333}
+/* watermark */
+.wm{position:absolute;right:12px;bottom:48px;z-index:1;text-align:right;color:#fff;font-size:11.5px;line-height:1.4;text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.7);text-decoration:none}
+.wm:hover u{text-decoration:underline}
+.wm b{font-weight:600}
+.wm .led{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:1px;background:#3ddc60;box-shadow:0 0 5px #3ddc60}
+.wm u{text-decoration:none}
+/* tray */
+.srv{width:14px;height:16px;position:relative;cursor:pointer;border:0;background:none;display:none}
+html.js .srv{display:block}
+.srv::before{content:"";position:absolute;left:3px;top:1px;width:8px;height:14px;border-radius:1px;background:linear-gradient(90deg,#d9dee5,#fff 50%,#c4cad3);box-shadow:0 0 2px #000}
+.srv::after{content:"";position:absolute;left:5px;top:3px;width:4px;height:1px;background:#556;box-shadow:0 2px #556,0 4px #556,1px 8px 0 .5px #2fd35a}
+/* taskbar */
+.task{position:absolute;left:0;right:0;bottom:0;height:40px;z-index:9000;display:flex;align-items:center;padding-left:58px;
+ background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,.08) 45%,rgba(0,0,0,.12) 50%,rgba(0,0,0,.05)),rgba(28,52,88,.72);
+ -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-top:1px solid rgba(0,0,0,.6);box-shadow:inset 0 1px rgba(255,255,255,.4)}
+html:not(.js) .task,html:not(.js) .bal{display:none}
+.orb{position:absolute;left:6px;bottom:1px;width:46px;height:46px;border-radius:50%;cursor:pointer;z-index:2;border:1px solid rgba(0,20,50,.9);
+ background:radial-gradient(circle at 50% 110%,rgba(120,230,255,.95) 0,rgba(40,140,230,.6) 35%,transparent 60%),radial-gradient(circle at 50% 40%,#2c7fd6 0,#0b3d86 65%,#061f4a 100%);
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.35),0 0 8px rgba(80,180,255,.5)}
+.orb::before{content:"";position:absolute;left:6px;right:6px;top:2px;height:20px;border-radius:50%/60% 60% 40% 40%;background:linear-gradient(rgba(255,255,255,.75),rgba(255,255,255,.05))}
+.orb::after{content:"";position:absolute;left:13px;top:11px;width:18px;height:21px;background:linear-gradient(90deg,#fff 50%,#d7ecff 50%);clip-path:polygon(50% 0,100% 16%,100% 54%,50% 100%,0 54%,0 16%);filter:drop-shadow(0 0 3px rgba(255,255,255,.8))}
+.orb.down,.orb:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.5),0 0 14px rgba(120,220,255,.95)}
+.tname{display:none}
+.tasks{display:flex;gap:2px;height:100%;padding:2px 0;min-width:0;overflow:hidden}
+.tk{height:36px;min-width:50px;max-width:160px;padding:0 10px 0 6px;border-radius:4px;border:1px solid transparent;display:flex;align-items:center;gap:6px;cursor:pointer;position:relative;background:none;color:#fff;font-size:12px;text-shadow:0 0 3px #000;white-space:nowrap;overflow:hidden}
+.tk .g{margin:0;transform:scale(.62);flex:none;width:40px;margin:0 -8px}
+.tk .lb{overflow:hidden;text-overflow:ellipsis}
+.tk .g[data-t]::before{content:attr(data-t)}
+@media (max-width:1180px){.tk .lb{display:none}.tk{padding:0 4px;justify-content:center}}
+.tk.open{border-color:rgba(0,0,0,.5);background:linear-gradient(rgba(255,255,255,.28),rgba(255,255,255,.06) 50%,rgba(255,255,255,.02) 51%,rgba(255,255,255,.1));box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}
+.tk.on{background:radial-gradient(70% 60% at 50% 100%,rgba(120,200,255,.6),transparent),linear-gradient(rgba(255,255,255,.4),rgba(255,255,255,.12) 50%,rgba(255,255,255,.05) 51%,rgba(255,255,255,.2))}
+.tk:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.5),0 0 6px rgba(150,210,255,.6)}
+.tray{margin-left:auto;display:flex;align-items:center;gap:10px;height:100%;color:#fff;font-size:11.5px;text-shadow:0 0 3px #000;flex:none;padding-left:8px}
+.tray .up{font-size:9px;opacity:.9}
+.viewbtn{display:none;height:26px;padding:0 10px;border:1px solid rgba(0,0,0,.55);border-radius:3px;color:#fff;font-size:11.5px;text-shadow:0 0 3px #000;cursor:pointer;background:linear-gradient(rgba(255,255,255,.35),rgba(255,255,255,.08) 50%,rgba(0,0,0,.08) 51%,rgba(255,255,255,.12));box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}
+html.js .viewbtn{display:block}
+.viewbtn:hover{background:linear-gradient(#bfe6ff,#78c1f0 48%,#3e9ee0 52%,#8fd3ff)}
+.flag{width:14px;height:14px;position:relative;cursor:pointer;border:0;background:none}.flag::before{content:"";position:absolute;left:1px;top:0;width:2px;height:14px;background:#fff}.flag::after{content:"";position:absolute;left:3px;top:1px;width:10px;height:7px;background:#e53935;border:1px solid #fff}
+.bars{display:flex;align-items:flex-end;gap:1px;height:13px}.bars i{width:3px;background:#fff}
+.vol{width:14px;height:12px;background:#fff;clip-path:polygon(0 30%,35% 30%,75% 0,75% 100%,35% 70%,0 70%)}
+.clk{text-align:center;line-height:1.25;padding:0 6px}
+.showd{width:14px;height:100%;border-left:1px solid rgba(0,0,0,.5);box-shadow:inset 1px 0 rgba(255,255,255,.3);background:linear-gradient(rgba(255,255,255,.15),rgba(255,255,255,0));border-top:0;border-right:0;border-bottom:0;cursor:pointer}
+/* simple-view banner (desktop users who chose Simple view) */
+.simplebar{display:none}
+html.simple-pref .simplebar{display:flex;justify-content:center;gap:10px;align-items:center;flex-wrap:wrap;color:#fff;text-shadow:0 1px 3px #000;font-size:14px;margin:0 auto 12px;max-width:760px;position:relative}
+/* start menu */
+.sm{position:absolute;left:0;bottom:40px;width:420px;height:520px;max-height:calc(100% - 48px);z-index:9001;display:flex;padding:30px 8px 46px;border-radius:7px 7px 0 0;border:1px solid rgba(0,0,0,.7);
+ background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,.08) 40px),rgba(30,58,100,.9);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.4),0 6px 24px rgba(0,0,0,.6)}
+.sm.hid{display:none}
+.sm .lc{width:240px;background:#fff;border:1px solid rgba(0,0,0,.5);border-radius:4px;display:flex;flex-direction:column;padding:6px 4px;overflow:auto}
+.sm .lc a,.sm .lc button{display:flex;align-items:center;gap:8px;padding:3px 6px;border:1px solid transparent;border-radius:3px;cursor:pointer;font-size:12px;color:#000;background:none;text-align:left;width:100%}
+.sm .lc .g{width:30px;height:30px;margin:0;transform:scale(.75);transform-origin:left top;flex:none}
+.sm .lc a:hover,.sm .lc a:focus-visible,.sm .lc button:hover,.sm .lc button:focus-visible{background:linear-gradient(#f2f8fe,#dcecfc);border-color:#7da2ce;text-decoration:none}
+.sm .lc .sp{margin-top:auto;border-top:1px solid #dbe3ee;padding:6px 8px 2px;color:#444;font-size:11.5px}
+.sm .rc{flex:1;padding:44px 0 0 10px;display:flex;flex-direction:column;gap:1px}
+.sm .rc a{padding:5px 8px;border:1px solid transparent;border-radius:3px;cursor:pointer;color:#fff;font-size:12px;text-shadow:0 0 3px #000}
+.sm .rc a:hover,.sm .rc a:focus-visible{background:linear-gradient(rgba(255,255,255,.3),rgba(255,255,255,.1));border-color:rgba(255,255,255,.5);text-decoration:none}
+.sm .rc .me{font-weight:600}
+.sm .uimg{position:absolute;right:46px;top:-26px;width:64px;height:64px;border-radius:6px;padding:4px;background:linear-gradient(#e9f2fc,#8eb5e0);border:1px solid rgba(0,0,0,.55);box-shadow:0 2px 6px rgba(0,0,0,.5)}
+.sm .uimg img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;border-radius:3px;display:block}
+.sm .smx{position:absolute;right:12px;bottom:10px;color:#fff;font-size:11.5px;text-shadow:0 0 3px #000;padding:3px 14px;border:1px solid rgba(0,0,0,.6);border-radius:3px;background:linear-gradient(rgba(255,255,255,.35),rgba(255,255,255,.08) 50%,rgba(0,0,0,.08) 51%);cursor:pointer}
+.sm .smn{display:none}
+/* ===== stacked layout: small screens, touch devices, Simple view, zoomed/short screens, and no-JS ===== */
+{{MOBILE_CSS}}
+/* theme toggle (tray icon, Start menu item, Simple view banner) */
+.thm{width:16px;height:16px;position:relative;cursor:pointer;border:0;background:none;display:none;padding:0}
+html.js .thm{display:block}
+.thm::before{content:"";position:absolute;left:2px;top:1px;width:12px;height:12px;border-radius:50%;box-shadow:inset -4px -1px 0 0 #fff;transform:rotate(-20deg);filter:drop-shadow(0 0 2px #000)}
+html.dark .thm::before{left:4px;top:4px;width:8px;height:8px;background:#ffd76a;box-shadow:0 0 0 2px rgba(255,215,106,.35),0 0 6px #ffd76a;transform:none;filter:none}
+.i-thm::before{content:"";position:absolute;left:7px;top:4px;width:28px;height:28px;border-radius:50%;box-shadow:inset -9px -3px 0 0 #f2c94c;transform:rotate(-20deg);filter:drop-shadow(0 1px 1px rgba(0,0,0,.45))}
+html.dark .i-thm::before{left:12px;top:9px;width:18px;height:18px;background:radial-gradient(circle at 40% 35%,#fff3c2,#ffd76a 55%,#f2a93b);box-shadow:0 0 0 4px rgba(255,215,106,.3),0 0 10px rgba(255,215,106,.8);transform:none}
+.sm .lc .smtheme .st,.thmb .st{margin-left:auto;font-size:11px;font-weight:600;color:#4a5568;border:1px solid #c5d0de;border-radius:2px;padding:0 5px;background:#f4f7fb}
+.thmb .st{margin-left:4px}
+.thmb .g{width:22px;height:22px;margin:0 2px 0 -4px;transform:scale(.55);transform-origin:left top}
+html.m .thm{width:44px;height:44px}
+html.m .thm::before{left:15px;top:15px;width:14px;height:14px}
+html.m.dark .thm::before{left:17px;top:17px;width:10px;height:10px}
+@media (max-width:420px){html.m .clk{display:none}}
+@media (prefers-reduced-motion:no-preference){html.theme-anim *,html.theme-anim *::before,html.theme-anim *::after{transition:background-color .25s ease,color .25s ease,border-color .25s ease,box-shadow .25s ease!important}}
+/* ===== dark theme: Windows 7 "dark Aero" (smoked glass, dark document bodies, night wallpaper) ===== */
+html.dark{background:#040d1d}
+html.dark body{color:#e3e8ef}
+:where(html.dark) a{color:#8cc4ff}
+html.dark .wall{filter:brightness(.46) saturate(1.15)}
+html.dark .cli :focus-visible,html.dark .sm .lc :focus-visible{outline-color:#8cc4ff}
+html.dark .win{border-color:rgba(0,0,0,.85);background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.04) 28px,rgba(40,60,90,.18)),rgba(16,24,38,.68);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2),0 6px 26px rgba(0,0,0,.7)}
+html.dark .win:not(.focus){background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.02) 28px),rgba(30,38,52,.6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 3px 14px rgba(0,0,0,.5)}
+html.dark .tb .t{color:#f2f6fb;text-shadow:0 0 6px #000,0 0 3px #000,0 0 1px #000}
+html.dark .cli{background:#1c2129;border-color:rgba(0,0,0,.8)}
+html.dark .sbar,html.dark .cmdbar,html.dark .chips{background:linear-gradient(#2b313b,#222830);border-color:#3a4351;color:#c9d4e3}
+html.dark .cmdbar a{color:#a9d0ff}
+html.dark .rtabs{background:linear-gradient(#2b313b,#222830);border-color:#3a4351;color:#c9d4e3}
+html.dark .rtabs span.on{background:#1c2129;border-color:#3a4351}
+html.dark .ruler{background:repeating-linear-gradient(90deg,transparent 0 9px,#5d6878 9px 10px) 0 8px/100% 5px no-repeat,#1c2129;border-color:#333b47}
+html.dark .docwrap{background:#0e1218}
+html.dark .page{background:#1c2129;color:#e3e8ef;box-shadow:0 0 4px rgba(0,0,0,.8)}
+html.dark .page .av{border-color:#3a4350;background:#262c35}
+html.dark .page h1{color:#eef4fc}
+html.dark .page .role{color:#9cc7f7}
+html.dark .page .facts,html.dark .page .m{color:#aeb9c8}
+html.dark .page h2{color:#9cc7f7;border-color:#35506f}
+html.dark .page h3{color:#d6e4f5}
+html.dark .page .flash{animation-name:flashd}
+@keyframes flashd{50%{background:#4b3f12}}
+html.dark .btn7{border-color:#5d6675;color:#eef2f7;background:linear-gradient(#3d444f,#353b45 45%,#2d333c 50%,#282d35)}
+html.dark .btn7:hover{border-color:#5ea3dc;background:linear-gradient(#34587e,#2c4d70 45%,#244260 50%,#22405c)}
+html.dark .btn7.pri{border-color:#0d2f57;color:#fff;background:linear-gradient(#4f8fd3,#22609f 45%,#18518f 50%,#205d9c)}
+html.dark .btn7.pri:hover{background:linear-gradient(#69a3e0,#2e6fb0 45%,#225d9e 50%,#2a6aab)}
+html.dark .glance{background:#18253a;border-color:#2f4767}
+html.dark .glance .gh{color:#d6e4f5}
+html.dark .glance li::before{background:#3ddc60}
+html.dark .b-hist{color:#f7dc8f;background:#3a2f0e;border-color:#7d6620}
+html.dark .b-done,html.dark .b-live{color:#9fe8b1;background:#11301b;border-color:#2f7c45}
+html.dark .b-prog{color:#b0d0fa;background:#132a48;border-color:#3b6ba6}
+html.dark .b-sim{color:#dac6f7;background:#2a1c42;border-color:#6b51a1}
+html.dark .sk th{color:#aebdd0;border-color:#36404d;background:linear-gradient(#272d36,#20252d)}
+html.dark .sk td{border-color:#2c333d}
+html.dark .sk td:first-child{color:#d6e4f5}
+html.dark .crumb{background:rgba(24,29,37,.94);border-color:rgba(0,0,0,.8);color:#e3e8ef}
+html.dark .crumb span.ar{color:#9aa6b5}
+html.dark .pv>p{color:#bcc7d5}
+html.dark .case{border-color:#353e4b;background:linear-gradient(#232932,#1e232b)}
+html.dark .case h3{color:#92c3ff}
+html.dark .case .meta,html.dark .case .res,html.dark .case .tools,html.dark .case dt{color:#aeb9c8}
+html.dark .case .tag{color:#d0e3fb;background:linear-gradient(#24405f,#1c3450);border-color:#41699a}
+html.dark .case .res b{color:#6fdc85}
+html.dark .case .one{color:#e3e8ef}
+html.dark .case summary{color:#8cc4ff}
+html.dark .web::before{background:linear-gradient(#e9eef5,#c9d3e0)}
+html.dark .chip{border-color:#5d6675;color:#eef2f7;background:linear-gradient(#3d444f,#353b45 45%,#2d333c 50%,#282d35)}
+html.dark .chip:hover{border-color:#5ea3dc;background:linear-gradient(#34587e,#2c4d70 45%,#244260 50%,#22405c)}
+html.dark .simnote{background:#2a1c42;border-color:#4a3670;color:#e3d5f8}
+html.dark .clock{filter:brightness(.85)}
+html.dark .bal{background:linear-gradient(#272d37,#1d2229);border-color:#566172;box-shadow:0 4px 14px rgba(0,0,0,.7)}
+html.dark .bal::after{background:#1d2229;border-color:#566172}
+html.dark .bal .hd{color:#b0d0fa}
+html.dark .bal p{color:#dde4ec}
+html.dark .bal .x{color:#cbd3dd}
+html.dark .bal .go{color:#8cc4ff}
+html.dark .sysnav{background:linear-gradient(90deg,#202933,#1a222c);border-color:#334050}
+html.dark .sysnav .h,html.dark .sysb h2,html.dark .sysb h3{color:#b0d0fa}
+html.dark .sysnav a{color:#8cc4ff}
+html.dark .sysb{color:#e3e8ef}
+html.dark .sysb h3::after{background:linear-gradient(90deg,#3a4a5e,transparent)}
+html.dark .sysb .ed .big{color:#d6e4f5}
+html.dark .kv dt{color:#aeb9c8}
+html.dark .kv dd{color:#e3e8ef}
+html.dark .sysb .on{color:#6fdc85}
+html.dark .sysb .note{background:#1a2430;border-color:#334050;color:#d3dbe5}
+html.dark .task{background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.03) 45%,rgba(0,0,0,.22) 50%,rgba(0,0,0,.1)),rgba(8,12,20,.84);border-top-color:#000;box-shadow:inset 0 1px rgba(255,255,255,.2)}
+html.dark .sm{background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.03) 40px),rgba(12,18,30,.94);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2),0 6px 24px rgba(0,0,0,.8)}
+html.dark .sm .lc{background:#1e232b;border-color:#000}
+html.dark .sm .lc a,html.dark .sm .lc button{color:#e6ebf1}
+html.dark .sm .lc a:hover,html.dark .sm .lc a:focus-visible,html.dark .sm .lc button:hover,html.dark .sm .lc button:focus-visible{background:linear-gradient(#2b4058,#22364c);border-color:#4f78a8}
+html.dark .sm .lc .sp{border-color:#343c48;color:#aeb9c8}
+html.dark .sm .lc .smtheme .st,html.dark .thmb .st{color:#9fe8b1;background:#11301b;border-color:#2f7c45}
+html.dark .sm .uimg{background:linear-gradient(#3a4a60,#1d2a3c)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+@media print{.wall,.task,.icons,.gad,.bal,.wm,.sm,.cap,.chips,.pl,.simplebar{display:none!important}body{overflow:visible;height:auto;background:#fff}.win{position:static!important;width:auto!important;height:auto!important;box-shadow:none;border:0;background:none!important;padding:0;-webkit-backdrop-filter:none;backdrop-filter:none}.win.hid{display:block}.page,.pv,.sysb{overflow:visible;height:auto}.scr{color:#000;background:#fff}}
+</style>
+</head>
+<body>
+<a class="skip" href="#about-h">Skip to content</a>
+<div class="wall" aria-hidden="true">
+ <svg viewBox="0 0 1280 800" preserveAspectRatio="none" fill="none">
+  <defs><filter id="bl" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="6"/></filter><filter id="bl2"><feGaussianBlur stdDeviation="1.4"/></filter>
+  <linearGradient id="st" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".45" stop-color="#cfeeff" stop-opacity=".8"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+  <g filter="url(#bl)" stroke="url(#st)">
+   <path d="M-40 560C220 420 470 520 700 380S1050 170 1330 240" stroke-width="34" opacity=".35"/>
+   <path d="M-40 640C260 500 520 590 760 450S1100 260 1330 330" stroke-width="18" opacity=".45"/>
+   <path d="M-40 470C200 360 430 420 650 320S1020 120 1330 150" stroke-width="10" opacity=".5"/>
+  </g>
+  <g filter="url(#bl2)" stroke="url(#st)">
+   <path d="M-40 600C240 470 500 560 730 420S1080 220 1330 290" stroke-width="2.5" opacity=".9"/>
+   <path d="M-40 520C230 400 460 480 690 350S1040 150 1330 200" stroke-width="1.5" opacity=".8"/>
+   <path d="M-40 680C280 540 540 620 780 480S1110 300 1330 370" stroke-width="1.2" opacity=".6"/>
+  </g>
+ </svg>
+ <div class="bokeh" style="left:55%;top:41%;width:90px;height:90px"></div>
+ <div class="bokeh" style="left:75%;top:25%;width:60px;height:60px"></div>
+ <div class="bokeh" style="left:33%;top:59%;width:120px;height:120px;opacity:.6"></div>
+ <div class="bokeh" style="left:87%;top:54%;width:40px;height:40px"></div>
+</div>
+
+<nav class="icons" aria-label="Desktop shortcuts">
+ <button type="button" class="ic" data-open="about"><span class="g i-doc" aria-hidden="true"></span>About Me</button>
+ <button type="button" class="ic" data-open="projects"><span class="g i-fold" aria-hidden="true"></span>Projects</button>
+ <button type="button" class="ic" data-open="experience"><span class="g i-cv" aria-hidden="true"></span>Experience &amp; Skills</button>
+ <button type="button" class="ic" data-href="/blog/"><span class="g i-net" aria-hidden="true"></span>Write-ups (Blog)</button>
+ <button type="button" class="ic" data-open="terminal"><span class="g i-cmd" aria-hidden="true">C:\&gt;</span>Command Prompt</button>
+ <button type="button" class="ic" data-open="server"><span class="g i-srv" aria-hidden="true"></span>This Site's Server</button>
+ <button type="button" class="ic" data-href="https://github.com/oemarino"><span class="g i-gh" aria-hidden="true">GH</span>GitHub</button>
+ <button type="button" class="ic" data-href="https://www.linkedin.com/in/omarino1"><span class="g i-in" aria-hidden="true">in</span>LinkedIn</button>
+ <button type="button" class="ic" data-hash="contact"><span class="g i-mail" aria-hidden="true"></span>Contact</button>
+</nav>
+
+<div class="gad clock" aria-hidden="true"><div class="tick"></div><div class="lbl" id="gdate"></div><i class="h" id="hh"></i><i class="mn" id="mm"></i><i class="s" id="ss"></i><b></b></div>
+<aside class="gad stat" aria-labelledby="stat-h">
+ <h2 id="stat-h"><span class="g i-sec" aria-hidden="true"></span>Homelab results</h2>
+ <div class="when">Historical · tested Oct 20, 2026</div>
+ <div class="r"><span>Greenbone (Med/Low)</span><b>9 → 0 real</b></div>
+ <div class="r"><span>Critical / High</span><b>0 → 0</b></div>
+ <div class="r"><span>IPv4 TCP ports open</span><b>0 of 1,007</b></div>
+ <div class="r"><span>SSH brute force</span><b>Rule 5712 fired</b></div>
+ <div class="r"><span>Boolean SQLi</span><b style="color:#ffd76a">Missed (documented)</b></div>
+</aside>
+
+<a class="wm" href="#server" id="wm"><b>osvaldomarino.dev</b><br><span class="led" aria-hidden="true"></span><u>Served from my homelab server</u></a>
+
+<div class="simplebar"><span>Simple view</span><button type="button" class="btn7" id="deskbtn">Switch to the Windows 7 desktop</button><button type="button" class="btn7 thmb" data-theme-toggle aria-pressed="false"><span class="g i-thm" aria-hidden="true"></span>Dark theme <span class="st" aria-hidden="true">Off</span></button></div>
+
+<main id="main">
+<!-- About Me (WordPad) -->
+<section class="win wp" id="about" data-title="About Me" data-icon="i-doc" aria-labelledby="about-h">
+ <div class="tb"><span class="mi g i-doc" aria-hidden="true"></span><div class="t" aria-hidden="true">About_Me.rtf - WordPad</div><div class="cap"><button type="button" data-a="min" aria-label="Minimize About Me">–</button><button type="button" class="mx" data-a="max" aria-label="Maximize About Me">□</button><button type="button" class="x" data-a="close" aria-label="Close About Me">✕</button></div></div>
+ <div class="cli">
+  <div class="rtabs" aria-hidden="true"><span class="f">▾</span><span class="on">Home</span><span>View</span></div>
+  <div class="ruler" aria-hidden="true"></div>
+  <div class="docwrap"><div class="page" id="page">
+   <picture><source type="image/webp" srcset="/img/osvaldo-192.webp"><img class="av" src="/img/osvaldo-192.jpg" alt="Osvaldo Marino" width="80" height="80" decoding="async"></picture>
+   <h1 id="about-h" tabindex="-1">Osvaldo Marino</h1>
+<!--IF:role-->
+   <p class="role">Cybersecurity student · Seeking cybersecurity internships</p>
+<!--ELSE:role-->
+   <p class="role">Cybersecurity student</p>
+<!--/IF:role-->
+   <p class="facts">Georgia State University · B.B.A. Computer Information Systems, Cybersecurity concentration · Expected Dec 2027 · Atlanta, GA</p>
+   <div class="cta">
+<!--IF:resume-->
+    {{RESUME_BTN}}
+<!--/IF:resume-->
+    <a class="btn7{{PROJ_PRI}}" href="#projects" data-open="projects">▸ Projects</a>
+    <a class="btn7" href="https://github.com/oemarino" target="_blank" rel="noopener noreferrer">GitHub<span class="vh"> (opens in a new tab)</span> ↗</a>
+    <a class="btn7" href="https://www.linkedin.com/in/omarino1" target="_blank" rel="noopener noreferrer">LinkedIn<span class="vh"> (opens in a new tab)</span> ↗</a>
+    <!--email_off--><a class="btn7" href="mailto:contact@osvaldomarino.dev">✉ Email</a><!--/email_off-->
+   </div>
+   <p>I build, break and defend my own homelab. I used Greenbone to scan my Ubuntu server, fixed or contained every real finding, and rescanned to prove it. I run a Wazuh SIEM against an isolated attack lab and write down what it catches and what it misses. This website is served from that same server through an outbound-only Cloudflare Tunnel.</p>
+   <p>I'm a first-generation college student. I completed the TryHackMe SOC Level 1 path and I'm studying for CompTIA Security+.</p>
+   <div class="glance" aria-labelledby="glance-h">
+    <div class="gh"><span id="glance-h">Results at a glance</span><span class="badge b-hist">Historical · tested Oct 20, 2026</span></div>
+    <ul>
+     <li><a href="#case-hardening" data-open="projects" data-case="case-hardening">Greenbone scan: 9 Medium/Low findings → 0 real</a> (1 documented false positive, 0 Critical/High before and after)</li>
+     <li><a href="#case-soc" data-open="projects" data-case="case-soc">Wazuh caught my SSH brute-force test (rule 5712)</a> and missed one SQL injection, which I documented</li>
+     <li><a href="#case-hosting" data-open="projects" data-case="case-hosting">0 of 1,007 IPv4 TCP ports open</a> in an outside-in check of my home connection</li>
+    </ul>
+   </div>
+   <h2>Looking for</h2>
+<!--IF:role-->
+   <p>Cybersecurity internships. Based in Atlanta, GA.</p>
+<!--ELSE:role-->
+   <p>Cybersecurity internships</p>
+<!--/IF:role-->
+   <h2 id="contact">Contact</h2>
+   <ul>
+    <li>Email: <!--email_off--><a href="mailto:contact@osvaldomarino.dev">contact@osvaldomarino.dev</a><!--/email_off--></li>
+    <li>LinkedIn: <a href="https://www.linkedin.com/in/omarino1" target="_blank" rel="noopener noreferrer">linkedin.com/in/omarino1</a></li>
+    <li>GitHub: <a href="https://github.com/oemarino" target="_blank" rel="noopener noreferrer">github.com/oemarino</a></li>
+    <li>TryHackMe: <a href="https://tryhackme.com/p/osvaldomarino82" target="_blank" rel="noopener noreferrer">tryhackme.com/p/osvaldomarino82</a></li>
+   </ul>
+   <p class="m" style="margin-top:10px">More: <a href="#experience" data-open="experience">Experience, education &amp; skills</a> · <a href="/blog/">All write-ups</a></p>
+  </div></div>
+  <div class="sbar" aria-hidden="true"><span>About_Me.rtf</span><span>100%</span></div>
+ </div>
+</section>
+
+<!-- Projects (Explorer) -->
+<section class="win ex" id="projects" data-title="Projects" data-icon="i-fold" aria-labelledby="projects-h">
+ <div class="tb"><span class="mi g i-fold" aria-hidden="true"></span><div class="t" aria-hidden="true">Projects</div><div class="cap"><button type="button" data-a="min" aria-label="Minimize Projects">–</button><button type="button" class="mx" data-a="max" aria-label="Maximize Projects">□</button><button type="button" class="x" data-a="close" aria-label="Close Projects">✕</button></div></div>
+ <div class="nav" aria-hidden="true"><span class="nb">◄</span><span class="nb d">►</span><div class="crumb"><span class="ar">▸</span><span>Osvaldo</span><span class="ar">▸</span><span>Documents</span><span class="ar">▸</span><span>Projects</span></div></div>
+ <div class="cli">
+  <div class="cmdbar"><a href="/blog/">Open all write-ups</a><a href="https://github.com/oemarino/homelab" target="_blank" rel="noopener noreferrer">Configs on GitHub ↗</a></div>
+  <div class="pv">
+   <h2 id="projects-h" class="vh">Projects</h2>
+   <p>Three projects from my homelab, each with a full write-up. Numbers are from tests I ran on <b>October 20, 2026</b>. They are a snapshot, not live monitoring.</p>
+
+   <article class="case" id="case-hardening" aria-labelledby="c1-h">
+    <div class="hd"><span class="g web" aria-hidden="true"></span><div><h3 id="c1-h"><a href="/blog/hardening-my-homelab/">Hardening my homelab: 9 findings to 0</a></h3><div class="meta"><span class="tag">Vulnerability management</span><span class="badge b-hist">Tested Oct 20, 2026</span></div></div><div class="res"><b>9 → 0</b>real findings</div></div>
+    <p class="one">Greenbone found 6 Medium and 3 Low issues on my Ubuntu server. I fixed or contained each real one, rescanned with the same settings, and proved the last Medium was a false positive.</p>
+    <p class="tools"><b>Tools:</b> Greenbone/OpenVAS · OpenSSH · ufw · nginx (TLS reverse proxy) · Docker · Tailscale · sysctl</p>
+    <details>
+     <summary>Case study: problem, actions, evidence, lessons</summary>
+     <dl>
+      <dt>Problem</dt><dd>A baseline scan (Full and fast, all TCP ports plus the top 100 UDP ports, QoD ≥ 70) found a cleartext panel login over HTTP, weak crypto on the vendor's SFTP ports, weak SSH MACs, and TCP/ICMP timestamp leaks.</dd>
+      <dt>Actions</dt><dd><ul><li>Restricted SSH to strong MACs, key exchange and ciphers. Validated with <code>sshd -t</code> and reloaded without dropping my session.</li><li>Put a hardened TLS reverse proxy in front of the panel and dropped plain HTTP.</li><li>The vendor's SFTP crypto can't be changed, so I limited those ports to Tailscale with ufw <code>before.rules</code>.</li><li>Disabled TCP timestamps and dropped ICMP timestamp requests.</li></ul></dd>
+      <dt>Evidence</dt><dd>Before and after Greenbone reports with the same scan config: baseline Oct 20, 2026, 2:37 AM ET; rescan 7:48 PM ET the same day. Sanitized configs are in the GitHub repo.</dd>
+      <dt>Result</dt><dd>Medium/Low went from 9 to 1, and that 1 is a documented false positive (the app returns HTTP 200 for every path). 0 Critical/High before and after.</dd>
+      <dt>Residual risk</dt><dd>The weak SFTP algorithms still exist, but only authenticated Tailscale devices can reach them.</dd>
+      <dt>Lessons</dt><dd>If you can't fix something, contain it and write down the residual risk. Confirm every fix with a rescan or a direct test.</dd>
+     </dl>
+    </details>
+    <div class="links"><a class="btn7 pri" href="/blog/hardening-my-homelab/">Read the write-up</a><a class="btn7" href="https://github.com/oemarino/homelab" target="_blank" rel="noopener noreferrer">Configs on GitHub<span class="vh"> (opens in a new tab)</span> ↗</a></div>
+   </article>
+
+   <article class="case" id="case-soc" aria-labelledby="c2-h">
+    <div class="hd"><span class="g web" aria-hidden="true"></span><div><h3 id="c2-h"><a href="/blog/home-soc-with-wazuh/">Building a home SOC with Wazuh</a></h3><div class="meta"><span class="tag">Detection &amp; SIEM</span><span class="badge b-hist">Tested Oct 20, 2026</span></div></div><div class="res"><b>5710 → 5712</b>brute-force correlation</div></div>
+    <p class="one">I deployed a single-node Wazuh 4.14.9 SIEM, attacked my own isolated lab, and recorded what it detected. That includes a SQL injection it missed.</p>
+    <p class="tools"><b>Tools:</b> Wazuh (SIEM, FIM, CIS benchmark) · Docker · DVWA · OWASP Juice Shop · nginx · MITRE ATT&amp;CK</p>
+    <details>
+     <summary>Case study: problem, actions, evidence, lessons</summary>
+     <dl>
+      <dt>Problem</dt><dd>I wanted to see attacks from the defender's side and test whether my detections actually fire.</dd>
+      <dt>Actions</dt><dd><ul><li>Enrolled my server as an endpoint: auth logs, ufw logs, Docker events, real-time file integrity monitoring on <code>/etc</code>, and the CIS Ubuntu 24.04 benchmark.</li><li>Ran DVWA and Juice Shop on a Docker internal network with no internet egress. The lab is off unless I start it.</li><li>Replaced every default password before first boot and kept the indexer and API on localhost only.</li></ul></dd>
+      <dt>Evidence</dt><dd>6 failed SSH logins produced 11 rule 5710 alerts and 1 level-10 rule 5712 brute-force correlation (MITRE T1110). The FIM test fired rules 554/550/553. A UNION SQL injection fired rule 31106.</dd>
+      <dt>Detection gap</dt><dd>A boolean <code>' OR '1'='1</code> SQL injection succeeded and raised <b>no alert</b>. Next step: a custom Wazuh rule, or ModSecurity with the OWASP Core Rule Set.</dd>
+      <dt>Triage</dt><dd>My own Greenbone rescan set off 735 rule 5710 alerts. I traced them to the scanner's container and confirmed it was authorized activity.</dd>
+      <dt>Lessons</dt><dd>Test your detections, because signatures have gaps. One correlated alert is more useful than hundreds of raw ones.</dd>
+     </dl>
+    </details>
+    <div class="links"><a class="btn7 pri" href="/blog/home-soc-with-wazuh/">Read the write-up</a><a class="btn7" href="https://github.com/oemarino/homelab" target="_blank" rel="noopener noreferrer">Configs on GitHub<span class="vh"> (opens in a new tab)</span> ↗</a></div>
+   </article>
+
+   <article class="case" id="case-hosting" aria-labelledby="c3-h">
+    <div class="hd"><span class="g web" aria-hidden="true"></span><div><h3 id="c3-h"><a href="/blog/zero-open-ports-website/">Hardened self-hosting with a Cloudflare Tunnel</a></h3><div class="meta"><span class="tag">Secure hosting</span><span class="badge b-hist">Checked Oct 20, 2026</span></div></div><div class="res"><b>0 of 1,007</b>IPv4 TCP ports open</div></div>
+    <p class="one">This site runs on my homelab server in a locked-down nginx container. The server connects out to Cloudflare, so my router has no port forward for the site.</p>
+    <p class="tools"><b>Tools:</b> Docker · nginx-unprivileged · Cloudflare Tunnel · Content Security Policy · ufw</p>
+    <details>
+     <summary>Case study: problem, actions, evidence, lessons</summary>
+     <dl>
+      <dt>Problem</dt><dd>I wanted to host a public website from home without opening an inbound port on my router.</dd>
+      <dt>Actions</dt><dd><ul><li>nginx runs as a non-root user with a read-only filesystem, <code>cap_drop: ALL</code>, <code>no-new-privileges</code> and resource limits.</li><li>The container listens only on localhost, and <code>cloudflared</code> connects out to Cloudflare.</li><li>A strict CSP (<code>default-src 'none'</code>, no inline scripts) plus nosniff, frame and referrer headers.</li></ul></dd>
+      <dt>Evidence</dt><dd>An outside-in check with public checkers, each validated against a host with known open ports: <b>0 of 1,007 IPv4 TCP ports open</b>. On IPv6, 16 common ports on each of 2 addresses all timed out.</dd>
+      <dt>Limits</dt><dd>Not a full 65,535-port TCP scan, and UDP wasn't tested. The check ran on Oct 20, 2026, before the site went live. The tunnel only makes outbound connections.</dd>
+      <dt>Lessons</dt><dd>The safest open port is no open port. State the scope of every security claim.</dd>
+     </dl>
+    </details>
+    <div class="links"><a class="btn7 pri" href="/blog/zero-open-ports-website/">Read the write-up</a><a class="btn7" href="#server" data-open="server">About this server</a></div>
+   </article>
+  </div>
+  <div class="sbar" aria-hidden="true"><span>3 items</span><span>osvaldomarino.dev</span></div>
+ </div>
+</section>
+
+<!-- Experience & Skills (WordPad) -->
+<section class="win cv hid" id="experience" data-title="Experience &amp; Skills" data-icon="i-cv" aria-labelledby="experience-h">
+ <div class="tb"><span class="mi g i-cv" aria-hidden="true"></span><div class="t" aria-hidden="true">Experience_and_Skills.rtf - WordPad</div><div class="cap"><button type="button" data-a="min" aria-label="Minimize Experience and Skills">–</button><button type="button" class="mx" data-a="max" aria-label="Maximize Experience and Skills">□</button><button type="button" class="x" data-a="close" aria-label="Close Experience and Skills">✕</button></div></div>
+ <div class="cli">
+  <div class="ruler" aria-hidden="true"></div>
+  <div class="docwrap"><div class="page">
+   <h2 id="experience-h" style="margin-top:0">Experience, education &amp; skills</h2>
+   <h3 id="skills">Skills, and where I've used them</h3>
+   <table class="sk">
+    <thead><tr><th scope="col">Area</th><th scope="col">What I've done</th><th scope="col">Evidence</th></tr></thead>
+    <tbody>
+     <tr><td>Linux administration</td><td>Ubuntu Server 24.04, OpenSSH crypto hardening, ufw, sysctl, safe changes on a live server</td><td><a href="/blog/hardening-my-homelab/">Hardening write-up</a></td></tr>
+     <tr><td>Vulnerability management</td><td>Greenbone/OpenVAS scans, fixes, rescans, false-positive analysis, residual-risk notes</td><td><a href="/blog/hardening-my-homelab/">Hardening write-up</a></td></tr>
+     <tr><td>SIEM &amp; incident triage</td><td>Wazuh deployment, detection testing, file integrity monitoring, alert triage, MITRE ATT&amp;CK mapping</td><td><a href="/blog/home-soc-with-wazuh/">Wazuh write-up</a>, TryHackMe SOC Level 1</td></tr>
+     <tr><td>Network security</td><td>Outbound-only Cloudflare Tunnel, Tailscale-only access rules, outside-in exposure checks</td><td><a href="/blog/zero-open-ports-website/">Hosting write-up</a></td></tr>
+     <tr><td>Containers &amp; web</td><td>Docker, nginx, least-privilege containers, CSP and security headers, DVWA/Juice Shop lab</td><td><a href="https://github.com/oemarino/homelab" target="_blank" rel="noopener noreferrer">homelab repo<span class="vh"> (opens in a new tab)</span></a></td></tr>
+    </tbody>
+   </table>
+<!--IF:extra_skills-->
+   <p class="m" style="margin-top:6px">Also familiar with: Wireshark, Python (no public write-up yet).</p>
+<!--/IF:extra_skills-->
+   <h3>Certifications &amp; training</h3>
+   <ul>
+    <li><span class="badge b-prog">In progress</span> CompTIA Security+ (SY0-701), exam expected Dec 2026</li>
+    <li><span class="badge b-done">Completed</span> TryHackMe SOC Level 1 learning path (Feb – Jul 2026, finished July 2026) · <a href="https://tryhackme.com/p/osvaldomarino82" target="_blank" rel="noopener noreferrer">TryHackMe profile<span class="vh"> (opens in a new tab)</span> ↗</a><br><span class="m">4 SOC capstone investigations · 4 phishing investigation reports · MITRE ATT&amp;CK mapping</span></li>
+   </ul>
+   <h3>Experience</h3>
+   <ul>
+    <li><b>Cybersecurity homelab</b>, self-directed · 2026 – Present<br><span class="m">Build, harden and monitor the Ubuntu server that hosts this site. See <a href="#projects" data-open="projects">Projects</a>.</span></li>
+<!--IF:quiktrip-->
+    <li><b>Store Clerk</b>, QuikTrip · Sept 2022 – Present</li>
+<!--/IF:quiktrip-->
+   </ul>
+   <h3>Education</h3>
+   <p>Georgia State University, J. Mack Robinson College of Business · Atlanta, GA<br>B.B.A., Computer Information Systems · Cybersecurity concentration · Expected Dec 2027<br><span class="m">Dean's List (7 semesters) · HOPE Scholarship · First-generation college student</span></p>
+  </div></div>
+  <div class="sbar" aria-hidden="true"><span>Experience_and_Skills.rtf</span><span>100%</span></div>
+ </div>
+</section>
+
+<!-- This site's server (Win7 System panel) -->
+<section class="win sv hid" id="server" data-title="This Site's Server" data-icon="i-srv" aria-labelledby="server-h">
+ <div class="tb"><span class="mi g i-srv" aria-hidden="true"></span><div class="t" aria-hidden="true">System - This site's server</div><div class="cap"><button type="button" data-a="min" aria-label="Minimize This Site's Server">–</button><button type="button" class="mx" data-a="max" aria-label="Maximize This Site's Server">□</button><button type="button" class="x" data-a="close" aria-label="Close This Site's Server">✕</button></div></div>
+ <div class="cli">
+  <div class="sysw">
+   <div class="sysnav"><div class="h">Control Panel Home</div><a href="/blog/zero-open-ports-website/">How I host this site</a><a href="#projects" data-open="projects">Projects</a><a href="https://github.com/oemarino/homelab" target="_blank" rel="noopener noreferrer">Configs on GitHub ↗</a></div>
+   <div class="sysb">
+    <h2 id="server-h">This site is self-hosted on my homelab</h2>
+    <div class="ed"><span class="g i-srv" aria-hidden="true"></span><p><span class="big">My own server, at home</span><br>No hosting company or cloud provider. I set it up, secure it and monitor it myself.</p></div>
+    <h3>Server</h3>
+    <dl class="kv">
+     <dt>Status:</dt><dd><span class="on">● Online</span> <span class="badge b-live">Live</span> It served the page you're reading now</dd>
+     <dt>Operating system:</dt><dd>Ubuntu Server 24.04 LTS</dd>
+     <dt>Hardware:</dt><dd>Intel Core i5-6500T (4 cores) · 16 GB RAM</dd>
+    </dl>
+    <h3>How this site is served</h3>
+    <dl class="kv">
+     <dt>Web server:</dt><dd>nginx in a locked-down Docker container (non-root, read-only)</dd>
+     <dt>Delivery:</dt><dd>Cloudflare Tunnel, outbound only. No port forward for the site on my router</dd>
+     <dt>Exposure check:</dt><dd>0 of 1,007 IPv4 TCP ports open in an outside-in check <span class="badge b-hist">Oct 20, 2026</span></dd>
+     <dt>Monitoring:</dt><dd>Wazuh SIEM agent on the server</dd>
+    </dl>
+    <p class="note">The same server also runs my Wazuh SIEM and an isolated practice lab. <a href="/blog/zero-open-ports-website/">Read how I host this site →</a></p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- Command Prompt -->
+<section class="win cm hid" id="terminal" data-title="Command Prompt" data-icon="i-cmd" aria-labelledby="terminal-h">
+ <div class="tb"><span class="mi g i-cmd" aria-hidden="true">C:\&gt;</span><div class="t" aria-hidden="true">Command Prompt (simulated)</div><div class="cap"><button type="button" data-a="min" aria-label="Minimize Command Prompt">–</button><button type="button" class="mx" data-a="max" aria-label="Maximize Command Prompt">□</button><button type="button" class="x" data-a="close" aria-label="Close Command Prompt">✕</button></div></div>
+ <div class="cli">
+  <h2 id="terminal-h" class="vh">Command Prompt (simulated)</h2>
+  <p class="simnote"><span class="badge b-sim">Simulated</span> A demo that runs only in your browser. Nothing you type is sent to my server.</p>
+  <div class="chips" role="group" aria-label="Example commands"><b>Try:</b></div>
+  <div class="scr" id="scr" role="log" aria-label="Command Prompt output"><span class="w">C:\Users\Osvaldo\homelab&gt;</span>type results.txt
+<span class="m">Results from tests on Oct 20, 2026 (historical, not live)</span>
+<span class="y">GREENBONE</span>   6 Medium + 3 Low  -&gt;  <span class="gr">0 real findings</span>
+            0 Critical / 0 High, 1 false positive documented
+<span class="y">EXTERNAL</span>    <span class="gr">0 of 1,007</span> IPv4 TCP ports open (not a full TCP/UDP scan)
+<span class="y">WAZUH</span>       rule 5712 (level 10) SSH brute force <span class="gr">DETECTED</span>
+            boolean SQL injection <span class="r">MISSED</span> (documented)
+
+<noscript>(JavaScript is off, so this prompt can't take commands, but everything on this page is readable.)
+</noscript><span class="cy" id="cmdhint">Type HELP and press Enter.</span>
+<div class="pl" id="pl"><span class="w" aria-hidden="true">C:\Users\Osvaldo\homelab&gt;</span><input id="cmd" type="text" maxlength="100" aria-label="Type a command, then press Enter" placeholder="type help" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send"></div></div>
+ </div>
+</section>
+</main>
+
+<!-- Wazuh alert balloon (replay of a past lab test) -->
+<div class="bal hid" id="bal" role="status" aria-live="polite">
+ <div class="hd"><span class="sh" aria-hidden="true">!</span>Wazuh rule 5712 (level 10) · replay<button type="button" class="x" id="balx" aria-label="Dismiss">✕</button></div>
+ <p>A replay of the alert from my own SSH brute-force test on Oct 20, 2026 (MITRE ATT&amp;CK T1110). This is not a live alert.</p>
+ <button type="button" class="go" id="balgo">See the Wazuh project ›</button>
+</div>
+
+<!-- Homelab server balloon -->
+<div class="bal hid" id="hbal" role="status" aria-live="polite">
+ <div class="hd"><span class="sh ok" aria-hidden="true">✓</span>Served from my homelab server<button type="button" class="x" id="hbalx" aria-label="Dismiss">✕</button></div>
+ <p>This page came from a server in my home, not a hosting company. It reaches you through an outbound-only Cloudflare Tunnel.</p>
+ <button type="button" class="go" id="hbalgo">About this server ›</button>
+</div>
+
+<!-- Start menu -->
+<nav class="sm hid" id="sm" aria-label="Start menu">
+ <div class="uimg"><picture><source type="image/webp" srcset="/img/osvaldo-192.webp"><img src="/img/osvaldo-192.jpg" alt="" width="56" height="56" decoding="async" loading="lazy"></picture></div>
+ <div class="smn">Osvaldo Marino<small>{{SM_SUB}}</small></div>
+ <div class="lc">
+  <a href="#about" data-open="about"><span class="g i-doc" aria-hidden="true"></span>About Me</a>
+  <a href="#projects" data-open="projects"><span class="g i-fold" aria-hidden="true"></span>Projects</a>
+  <a href="#experience" data-open="experience"><span class="g i-cv" aria-hidden="true"></span>Experience &amp; Skills</a>
+  <a href="/blog/"><span class="g i-net" aria-hidden="true"></span>Write-ups (Blog)</a>
+  <a href="#terminal" data-open="terminal"><span class="g i-cmd" aria-hidden="true">C:\&gt;</span>Command Prompt</a>
+  <a href="#server" data-open="server"><span class="g i-srv" aria-hidden="true"></span>This Site's Server</a>
+  <button type="button" class="smview" id="smview"><span class="g i-pc" aria-hidden="true"></span><span>Simple view</span></button>
+  <button type="button" class="smtheme" id="smtheme" data-theme-toggle aria-pressed="false"><span class="g i-thm" aria-hidden="true"></span><span>Dark theme</span><span class="st" aria-hidden="true">Off</span></button>
+  <div class="sp">{{SM_FOOT}}</div>
+ </div>
+ <div class="rc">
+  <a class="me" href="#about" data-open="about">Osvaldo Marino</a>
+<!--IF:resume-->
+  {{RESUME_SM}}
+<!--/IF:resume-->
+  <a href="https://github.com/oemarino" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+  <a href="https://github.com/oemarino/homelab" target="_blank" rel="noopener noreferrer">homelab repo ↗</a>
+  <a href="https://www.linkedin.com/in/omarino1" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+  <a href="https://tryhackme.com/p/osvaldomarino82" target="_blank" rel="noopener noreferrer">TryHackMe ↗</a>
+  <!--email_off--><a href="mailto:contact@osvaldomarino.dev">Email me</a><!--/email_off-->
+ </div>
+ <button type="button" class="smx" id="smx">Close ✕</button>
+</nav>
+
+<div class="task">
+ <button type="button" class="orb" id="orb" aria-label="Start menu" aria-controls="sm" aria-expanded="false"></button>
+ <span class="tname">Osvaldo Marino</span>
+ <div class="tasks" id="tasks" role="toolbar" aria-label="Open windows"></div>
+ <div class="tray"><button type="button" class="viewbtn" id="viewbtn">Simple view</button><span class="up" aria-hidden="true">▲</span><button type="button" class="thm" id="thm" data-theme-toggle aria-pressed="false"><span class="vh">Dark theme</span></button><button type="button" class="srv" id="srv" title="Homelab server: serving this site" aria-label="About the homelab server serving this site"></button><button type="button" class="flag" id="flag" title="Wazuh alert replay" aria-label="Show a replay of my Wazuh lab alert"></button><span class="bars" aria-hidden="true"><i style="height:4px"></i><i style="height:7px"></i><i style="height:10px"></i><i style="height:13px"></i></span><span class="vol" aria-hidden="true"></span><div class="clk" aria-hidden="true"><div id="t1"></div><div id="t2"></div></div><button type="button" class="showd" id="showd" aria-label="Show desktop"></button></div>
+</div>
+</body>
+</html>

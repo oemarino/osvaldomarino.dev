@@ -1,0 +1,719 @@
+# Blog generator for osvaldomarino.dev — Windows 7 theme (Oct 20 2026).
+# Builds /blog/ (index + posts) into OUT. The home page is built separately (/workspace/win7-deploy).
+# Previous Showstopper version of this script: build_blog.showstopper.py
+import re, os, html, hashlib, shutil, json
+OUT='/workspace/site-v2/out-blog'
+SITE='https://osvaldomarino.dev'
+FAVICON=open('/workspace/site-v2/favicon.txt').read().strip()
+JS_SRC='/workspace/site-v2/src/blog.js'
+JSV=hashlib.sha256(open(JS_SRC,'rb').read()).hexdigest()[:10]
+THEME_SRC='/workspace/site-v2/src/theme.js'
+THV=hashlib.sha256(open(THEME_SRC,'rb').read()).hexdigest()[:10]
+COVER=SITE+'/img/og-2026-10c.jpg'
+COVER_ALT='osvaldomarino.dev'
+
+CSS=r"""
+@font-face{font-family:'Open Sans';src:url(/fonts/opensans.woff2) format('woff2');font-weight:400 700;font-display:swap}
+@font-face{font-family:Inconsolata;src:url(/fonts/inconsolata.woff2) format('woff2');font-weight:400 700;font-display:swap}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+html{background:#0d4790;-webkit-text-size-adjust:100%}
+body{font:12px/1.4 'Open Sans','Segoe UI',system-ui,sans-serif;color:#1e1e1e;overflow:hidden;position:relative}
+a{color:#0066cc}
+:focus-visible{outline:2px dotted #fff;outline-offset:1px}
+.cli :focus-visible{outline:2px solid #1e3287;outline-offset:2px}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:-999px;top:6px;z-index:30000;background:#fff;color:#000;padding:8px 12px;border-radius:4px}.skip:focus{left:6px}
+.wall{position:absolute;inset:0;pointer-events:none;overflow:hidden;background:radial-gradient(70% 60% at 50% 42%,#3b9be0 0,#1d6fc0 35%,#0d4790 65%,#062a5c 100%)}
+html[data-wall="matrix"] .wall{background:radial-gradient(70% 60% at 50% 42%,#3fbf5a 0,#1c8a3a 35%,#0d5a24 65%,#03270f 100%)}
+html[data-wall="sunset"] .wall{background:radial-gradient(70% 60% at 50% 42%,#ffb35c 0,#ea6a2f 35%,#a8325a 65%,#45163f 100%)}
+html[data-wall="ice"] .wall{background:radial-gradient(70% 60% at 50% 42%,#bff1ff 0,#5cc4ec 35%,#2185c4 65%,#0b4a7e 100%)}
+.wall svg{position:absolute;inset:0;width:100%;height:100%}
+.g{width:40px;height:38px;margin:0 auto 4px;position:relative;display:block}
+.i-pc::before{content:"";position:absolute;left:3px;top:2px;width:34px;height:25px;border-radius:3px;background:linear-gradient(160deg,#9fe0ff,#1b7bd6 55%,#0b3f8a);border:3px solid #2b2f36;box-shadow:0 1px 2px rgba(0,0,0,.5)}
+.i-pc::after{content:"";position:absolute;left:12px;top:29px;width:16px;height:6px;background:linear-gradient(#8a9099,#4c525b);border-radius:1px 1px 4px 4px}
+.i-fold::before{content:"";position:absolute;left:2px;top:4px;width:16px;height:8px;border-radius:3px 3px 0 0;background:#d9a92a}
+.i-fold::after{content:"";position:absolute;left:2px;top:9px;width:36px;height:26px;border-radius:2px 2px 3px 3px;background:linear-gradient(#ffe89a,#f4c443 55%,#e0a520);box-shadow:inset 0 1px rgba(255,255,255,.8),0 1px 2px rgba(0,0,0,.4)}
+.i-doc::before{content:"";position:absolute;left:7px;top:1px;width:26px;height:35px;border-radius:2px;background:linear-gradient(#fff,#e6eef8);border:1px solid #7b8ea8;box-shadow:0 1px 2px rgba(0,0,0,.4)}
+.i-doc::after{content:"";position:absolute;left:11px;top:8px;width:18px;height:20px;background:repeating-linear-gradient(#2f6fc9 0 2px,transparent 2px 5px)}
+.i-net::before{content:"";position:absolute;left:4px;top:2px;width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d6f4ff,#3fa4ef 40%,#0b4ea6 80%);box-shadow:0 1px 3px rgba(0,0,0,.5)}
+.i-net::after{content:"";position:absolute;left:11px;top:3px;width:18px;height:30px;border:2px solid rgba(255,255,255,.55);border-radius:50%}
+.i-sec::before{content:"";position:absolute;left:7px;top:2px;width:26px;height:32px;background:linear-gradient(90deg,#1c8a3a 50%,#2fb352 50%);clip-path:polygon(50% 0,100% 15%,100% 55%,50% 100%,0 55%,0 15%)}
+.i-sec::after{content:"";position:absolute;left:16px;top:9px;width:7px;height:13px;border-right:3px solid #fff;border-bottom:3px solid #fff;transform:rotate(40deg)}
+.web::before{content:"";position:absolute;left:8px;top:2px;width:30px;height:38px;border-radius:2px;background:linear-gradient(#fff,#e8eef6);border:1px solid #8395ad;box-shadow:0 1px 2px rgba(0,0,0,.35)}
+.web::after{content:"";position:absolute;left:14px;top:14px;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d6f4ff,#3fa4ef 45%,#0b4ea6 85%)}
+/* desktop icons (wide screens) */
+.icons{position:absolute;left:6px;top:8px;display:none;gap:4px;z-index:1}
+@media (min-width:1180px) and (hover:hover){.icons{display:grid}}
+.ic{display:block;width:80px;padding:4px 2px 5px;text-align:center;color:#fff;text-decoration:none;text-shadow:0 1px 2px #000,0 0 4px rgba(0,0,0,.6);border:1px solid transparent;border-radius:3px;line-height:1.25;font-size:12px}
+.ic:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3)}
+/* glass window */
+.win{position:absolute;top:14px;bottom:54px;left:50%;transform:translateX(-50%);width:min(980px,calc(100% - 28px));display:flex;flex-direction:column;padding:0 7px 7px;border-radius:7px;border:1px solid rgba(0,0,0,.65);
+ background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,.08) 28px,rgba(160,195,230,.18)),rgba(110,150,200,.42);
+ -webkit-backdrop-filter:blur(9px) saturate(1.2);backdrop-filter:blur(9px) saturate(1.2);box-shadow:inset 0 0 0 1px rgba(255,255,255,.45),0 6px 26px rgba(0,0,0,.5)}
+@media (min-width:1180px) and (hover:hover){.win{left:calc(50% + 40px)}}
+.tb{height:30px;flex:none;display:flex;align-items:flex-start;gap:6px;padding-top:6px}
+.tb .mi{width:16px;height:16px;flex:none;transform:scale(.42);transform-origin:left top;margin:0}
+.tb .t{flex:1;min-width:0;font-size:12.5px;font-weight:400;color:#000;text-shadow:0 0 8px #fff,0 0 4px #fff,0 0 2px #fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cap{display:flex;margin-top:-7px;align-self:flex-start;flex:none}
+.cap span,.cap a{display:block;height:19px;width:26px;border:1px solid rgba(0,0,0,.55);border-top:0;background:linear-gradient(rgba(255,255,255,.6),rgba(255,255,255,.2) 48%,rgba(255,255,255,.05) 52%,rgba(255,255,255,.25));color:#fff;font:700 11px/17px 'Open Sans',sans-serif;text-align:center;text-decoration:none;text-shadow:0 0 2px #000,0 0 3px #000;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.cap span:first-child{border-radius:0 0 0 4px}
+.cap>*+*{border-left:0!important}
+.cap a.x{width:44px;border-radius:0 0 4px 0;background:linear-gradient(#eaa48f,#d7563c 48%,#c13a1d 52%,#d2654a);font-size:13px}
+.cap a.x:hover{background:linear-gradient(#f6b9a3,#e86a4f 48%,#d84a28 52%,#e9876a)}
+/* explorer nav row */
+.nav{display:flex;gap:6px;align-items:center;padding:1px 0 6px;flex:none}
+.nb{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 50% 30%,#bfe2ff,#2f7fd0 60%,#14509a);border:1px solid #153f72;color:#fff;font:700 12px/24px 'Open Sans',sans-serif;text-align:center;flex:none;text-decoration:none}
+.nb:hover{box-shadow:0 0 8px rgba(150,215,255,.9)}
+.nb.d{filter:grayscale(1) opacity(.6)}
+.crumb{flex:1;min-width:0;display:flex;align-items:center;height:26px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.45);border-radius:2px;font-size:12px;overflow:hidden;white-space:nowrap}
+.crumb a,.crumb span{padding:0 6px;color:#000;text-decoration:none}
+.crumb a:hover{background:linear-gradient(#f2f8fe,#dcecfc)}
+.crumb .ar{padding:0 1px;color:#555;font-size:9px}
+.crumb .cur{overflow:hidden;text-overflow:ellipsis}
+.homebtn{display:flex;align-items:center;gap:5px;height:26px;padding:0 12px;border:1px solid rgba(0,0,0,.5);border-radius:3px;color:#fff;font-size:12px;text-decoration:none;text-shadow:0 0 3px #000;background:linear-gradient(rgba(255,255,255,.4),rgba(255,255,255,.1) 50%,rgba(0,0,0,.05) 51%,rgba(255,255,255,.15));box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);flex:none}
+.homebtn:hover{background:linear-gradient(#bfe6ff,#78c1f0 48%,#3e9ee0 52%,#8fd3ff)}
+.cli{flex:1;display:flex;flex-direction:column;background:#fff;border:1px solid rgba(0,0,0,.45);min-height:0;overflow:hidden}
+.cmdbar{display:flex;gap:16px;padding:5px 10px;background:linear-gradient(#f5f9fd,#dde8f5);border-bottom:1px solid #b9c9de;flex:none;font-size:12px}
+.cmdbar a{color:#1e395b;text-decoration:none}.cmdbar a:hover{text-decoration:underline}
+.sbar{display:flex;gap:14px;padding:3px 8px;background:linear-gradient(#f1f5fb,#dde6f1);border-top:1px solid #b6c6db;font-size:11px;color:#2d3e55;flex:none}
+.sbar span:first-child{flex:1}
+/* wordpad document */
+.rtabs{display:flex;gap:2px;background:linear-gradient(#f6f9fd,#dfe9f5);padding:2px 4px 0;border-bottom:1px solid #b6c6db;flex:none;font-size:12px}
+.rtabs span{padding:2px 12px;border:1px solid transparent;border-bottom:0;border-radius:3px 3px 0 0}
+.rtabs span.f{background:#2e6bc6;color:#fff}.rtabs span.on{background:#fbfdff;border-color:#b6c6db;margin-bottom:-1px}
+.ruler{height:15px;background:repeating-linear-gradient(90deg,transparent 0 9px,#9aa7b8 9px 10px) 0 9px/100% 5px no-repeat,#fff;border-bottom:1px solid #d0d8e4;flex:none}
+.docwrap{flex:1;min-height:0;overflow:auto;background:#abb9cd;padding:14px 14px 0;scrollbar-width:thin;scrollbar-color:#8193ad #c9d3e1}
+.page{max-width:calc(70ch + 96px);margin:0 auto;background:#fff;padding:40px 48px 44px;box-shadow:0 0 5px rgba(0,0,0,.35);font-size:16.5px;line-height:1.7;color:#1f2328;margin-bottom:14px}
+.page h1{font-size:32px;line-height:1.18;color:#17365d;font-weight:700;margin:10px 0 12px;letter-spacing:-.01em}
+.meta{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;color:#5a6577;font-size:13.5px}
+.meta .hist{background:#fff6d6;border:1px solid #d6b85a;border-radius:3px;padding:0 8px;color:#5a3e00;font-size:12.5px}
+.meta .pill{background:linear-gradient(#e5f1fd,#cce4fa);border:1px solid #84acdd;border-radius:3px;padding:1px 9px;color:#1e3287;font-weight:600}
+.lead{font-size:18.5px;line-height:1.6;color:#33404f;margin:6px 0 4px}
+.prose{border-top:1px solid #dfe6ef;margin-top:26px;padding-top:22px}
+.prose .k{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#4f6228}
+.prose h2{font-size:23px;line-height:1.3;color:#1f497d;margin:2px 0 10px;font-weight:700}
+.prose p+p{margin-top:12px}
+.prose ul,.prose ol{padding-left:24px;margin-top:8px}
+.prose li{margin:7px 0}
+.prose li::marker{color:#2e6bc6}
+.prose strong{color:#111}
+.prose a{color:#0066cc;text-underline-offset:2px}
+.prose code{font:15px/1.4 Inconsolata,ui-monospace,Consolas,monospace;background:#eef3f9;border:1px solid #d5dfeb;padding:1px 5px;border-radius:3px;color:#17365d;overflow-wrap:anywhere}
+.prose pre{margin-top:14px;padding:12px 14px;background:#0c0c0c;color:#d4d4d4;border:1px solid #2a2a2a;border-radius:3px;overflow-x:auto;font:15px/1.55 Inconsolata,ui-monospace,Consolas,monospace;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);scrollbar-width:thin;scrollbar-color:#555 #0c0c0c}
+.prose pre code{background:none;border:0;padding:0;color:inherit;overflow-wrap:normal;white-space:pre}
+.tbl{overflow-x:auto;margin-top:14px;border:1px solid #c9d6e6;border-radius:3px}
+.tbl table{width:100%;border-collapse:collapse;font-size:15px;min-width:440px}
+.tbl th,.tbl td{padding:8px 12px;text-align:left;border-bottom:1px solid #e3e9f1;vertical-align:top}
+.tbl th{font-size:12.5px;font-weight:600;color:#4c607a;background:linear-gradient(#fff,#eef3f9);border-right:1px solid #e3e9f1}
+.tbl tr:last-child td{border-bottom:0}
+.tbl code{overflow-wrap:normal;word-break:normal}
+.tbl tbody tr:hover td{background:#f2f8fe}
+td.num{font-variant-numeric:tabular-nums;font-weight:700}
+.good{color:#13801f!important}.warn{color:#9a6700!important}.bad{color:#c0392b!important}
+.prose.learned{border:1px solid #b9dcc0;background:linear-gradient(#f3fbf4,#e8f6ea);border-radius:4px;padding:18px 22px;margin-top:28px}
+.prose.learned .k{color:#1c8a3a}
+.prose img{max-width:100%;height:auto}
+.post-nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:30px;padding-top:18px;border-top:1px solid #dfe6ef}
+.btn7{display:inline-flex;align-items:center;gap:6px;min-height:30px;padding:4px 14px;border:1px solid #707070;border-radius:3px;background:linear-gradient(#f2f2f2,#ebebeb 45%,#ddd 50%,#cfcfcf);color:#000;font-size:14px;text-decoration:none;max-width:100%}
+.btn7:hover{border-color:#3c7fb1;background:linear-gradient(#eaf6fd,#d9f0fc 45%,#bee6fd 50%,#a7d9f5)}
+/* explorer list (blog index) */
+.fv{flex:1;display:flex;min-height:0}
+.np{width:170px;padding:8px 4px;border-right:1px solid #e1e8f1;font-size:12px;flex:none;overflow:auto}
+.np a,.np div{padding:3px 6px 3px 10px;display:flex;align-items:center;gap:6px;color:#000;text-decoration:none;border:1px solid transparent;border-radius:2px}
+.np a:hover{background:linear-gradient(#f2f8fe,#e1effc);border-color:#b8d6fb}
+.np .h{padding-left:4px;color:#1e3287;font-weight:600;margin-top:6px}
+.np .on{background:linear-gradient(#e5f1fd,#cce4fa);border-color:#84acdd}
+.np .g{width:16px;height:16px;margin:0;transform:scale(.4);transform-origin:left top;flex:none}
+.files{flex:1;min-width:0;overflow:auto;padding:14px 18px 18px}
+.intro{font-size:15px;line-height:1.6;color:#33404f;max-width:80ch;margin-bottom:12px}
+.intro h1{font-size:22px;color:#1e3287;font-weight:400;margin-bottom:4px}
+.colhdr{display:grid;grid-template-columns:minmax(0,1fr) 130px 120px;gap:12px;padding:4px 10px 4px 64px;font-size:12px;color:#4c607a;border-bottom:1px solid #e1e8f1;background:linear-gradient(#fff,#f3f6fa)}
+.item{display:grid;grid-template-columns:44px minmax(0,1fr) 130px 120px;gap:12px;align-items:start;padding:12px 10px;border:1px solid transparent;border-radius:3px;color:#1f2328;text-decoration:none;margin-top:4px}
+.item:hover,.item:focus-visible{background:linear-gradient(#f2f8fe,#e1effc);border-color:#b8d6fb}
+.item .g{width:44px;height:44px;margin:0}
+.item h2{font-size:17px;line-height:1.3;color:#0645ad;font-weight:600}
+.item:hover h2{text-decoration:underline}
+.item p{font-size:14.5px;line-height:1.55;color:#3a4553;margin-top:3px}
+.item .tag{display:inline-block;margin-top:6px;font-size:12px;color:#1e3287;background:linear-gradient(#e5f1fd,#cce4fa);border:1px solid #84acdd;border-radius:3px;padding:0 7px}
+.item .dt{font-size:13px;color:#5a6577;padding-top:2px}
+.item .st{font-size:13px;color:#5a6577;padding-top:2px}
+.item .st b{display:block;font-size:17px;color:#13801f}
+/* taskbar + start menu */
+.task{position:absolute;left:0;right:0;bottom:0;height:40px;z-index:9000;display:flex;align-items:center;padding-left:58px;
+ background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,.08) 45%,rgba(0,0,0,.12) 50%,rgba(0,0,0,.05)),rgba(28,52,88,.62);
+ -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-top:1px solid rgba(0,0,0,.6);box-shadow:inset 0 1px rgba(255,255,255,.4)}
+.orb{position:absolute;left:6px;bottom:1px;width:46px;height:46px;border-radius:50%;cursor:pointer;z-index:2;border:1px solid rgba(0,20,50,.9);display:block;
+ background:radial-gradient(circle at 50% 110%,rgba(120,230,255,.95) 0,rgba(40,140,230,.6) 35%,transparent 60%),radial-gradient(circle at 50% 40%,#2c7fd6 0,#0b3d86 65%,#061f4a 100%);
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.35),0 0 8px rgba(80,180,255,.5)}
+.orb::before{content:"";position:absolute;left:6px;right:6px;top:2px;height:20px;border-radius:50%/60% 60% 40% 40%;background:linear-gradient(rgba(255,255,255,.75),rgba(255,255,255,.05))}
+.orb::after{content:"";position:absolute;left:13px;top:11px;width:18px;height:21px;background:linear-gradient(90deg,#fff 50%,#d7ecff 50%);clip-path:polygon(50% 0,100% 16%,100% 54%,50% 100%,0 54%,0 16%);filter:drop-shadow(0 0 3px rgba(255,255,255,.8))}
+.orb.down,.orb:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.5),0 0 14px rgba(120,220,255,.95)}
+.tasks{display:flex;gap:2px;height:100%;padding:2px 0}
+.tk{width:58px;height:36px;border-radius:4px;border:1px solid transparent;display:grid;place-items:center;text-decoration:none}
+.tk .g{margin:0;transform:scale(.78)}
+.tk.on{border-color:rgba(0,0,0,.5);background:radial-gradient(70% 60% at 50% 100%,rgba(120,200,255,.6),transparent),linear-gradient(rgba(255,255,255,.4),rgba(255,255,255,.12) 50%,rgba(255,255,255,.05) 51%,rgba(255,255,255,.2));box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}
+.tk:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.5),0 0 6px rgba(150,210,255,.6)}
+.tname{display:none}
+.tray{margin-left:auto;display:flex;align-items:center;gap:10px;height:100%;color:#fff;font-size:11.5px;text-shadow:0 0 3px #000;padding-right:10px}
+.clk{text-align:center;line-height:1.25;padding:0 6px}
+.srv{display:block;width:14px;height:16px;position:relative}
+.srv::before{content:"";position:absolute;left:3px;top:1px;width:8px;height:14px;border-radius:1px;background:linear-gradient(90deg,#d9dee5,#fff 50%,#c4cad3);box-shadow:0 0 2px #000}
+.srv::after{content:"";position:absolute;left:5px;top:3px;width:4px;height:1px;background:#556;box-shadow:0 2px #556,0 4px #556,1px 8px 0 .5px #2fd35a}
+.led{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px;background:#2fd35a;box-shadow:0 0 4px #2fd35a}
+.selfhost{margin:16px 0 4px;padding:8px 11px;border:1px solid #d5e0ee;border-radius:3px;background:#f4f8fd;font-size:12px;color:#333}
+.sm{position:absolute;left:0;bottom:40px;width:404px;max-height:calc(100% - 48px);z-index:9001;display:flex;padding:30px 8px 46px;border-radius:7px 7px 0 0;border:1px solid rgba(0,0,0,.7);
+ background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,.08) 40px),rgba(40,70,115,.82);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.4),0 6px 24px rgba(0,0,0,.6)}
+.sm.hid{display:none}
+.sm .lc{width:236px;background:#fff;border:1px solid rgba(0,0,0,.5);border-radius:4px;display:flex;flex-direction:column;padding:6px 4px}
+.sm .lc a{display:flex;align-items:center;gap:8px;padding:4px 6px;border:1px solid transparent;border-radius:3px;font-size:12px;color:#000;text-decoration:none}
+.sm .lc a .g{width:30px;height:30px;margin:0;transform:scale(.75);transform-origin:left top;flex:none}
+.sm .lc a:hover,.sm .lc a:focus-visible{background:linear-gradient(#f2f8fe,#dcecfc);border-color:#7da2ce}
+.sm .rc{flex:1;padding:44px 0 0 10px;display:flex;flex-direction:column;gap:1px}
+.sm .rc a{padding:5px 8px;border:1px solid transparent;border-radius:3px;color:#fff;font-size:12px;text-shadow:0 0 3px #000;text-decoration:none}
+.sm .rc a:hover,.sm .rc a:focus-visible{background:linear-gradient(rgba(255,255,255,.3),rgba(255,255,255,.1));border-color:rgba(255,255,255,.5)}
+.sm .uimg{position:absolute;right:46px;top:-26px;width:64px;height:64px;border-radius:6px;padding:4px;background:linear-gradient(#e9f2fc,#8eb5e0);border:1px solid rgba(0,0,0,.55);box-shadow:0 2px 6px rgba(0,0,0,.5)}
+.sm .uimg img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;border-radius:3px;display:block}
+.sm .smn{display:none}
+.sm .smx{position:absolute;right:12px;bottom:10px;color:#fff;font:inherit;font-size:11.5px;text-shadow:0 0 3px #000;padding:3px 14px;border:1px solid rgba(0,0,0,.6);border-radius:3px;background:linear-gradient(rgba(255,255,255,.35),rgba(255,255,255,.08) 50%,rgba(0,0,0,.08) 51%);cursor:pointer}
+/* ============ MOBILE / TOUCH ============ */
+@media (max-width:768px),(hover:none) and (pointer:coarse){
+ html,body{height:auto}
+ body{overflow-x:hidden;overflow-y:auto;padding:8px 8px calc(66px + env(safe-area-inset-bottom));min-height:100vh;min-height:100dvh}
+ .wall{position:fixed}
+ .win{position:relative;top:auto;bottom:auto;left:auto;transform:none;width:auto;max-width:860px;margin:0 auto;padding:0 5px 5px;-webkit-backdrop-filter:none;backdrop-filter:none;background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,.08) 28px,rgba(160,195,230,.18)),rgba(70,120,185,.75)}
+ .tb{position:sticky;top:0;z-index:50;height:48px;align-items:center;padding:0 0 0 4px;margin:0 -5px;padding-left:9px;border-radius:7px 7px 0 0;
+  background:linear-gradient(180deg,rgba(225,238,252,.97),rgba(178,206,238,.97) 50%,rgba(150,186,228,.97) 51%,rgba(172,202,236,.97));border-bottom:1px solid rgba(0,0,0,.35);box-shadow:inset 0 1px rgba(255,255,255,.8)}
+ .tb .t{font-size:15px;text-shadow:none}
+ .tb .mi{transform:scale(.55);width:22px;height:22px}
+ .cap{margin:0 4px 0 0;align-self:center}
+ .cap span{display:none}
+ .cap a.x{width:52px;height:44px;line-height:42px;font-size:18px;border:1px solid rgba(0,0,0,.55);border-radius:4px}
+ .nav{padding:6px 0;gap:8px}
+ .nb{width:44px;height:44px;line-height:42px;font-size:16px}
+ .nb.d{display:none}
+ .crumb{height:44px;font-size:14px}
+ .crumb .hide-m{display:none}
+ .homebtn{height:44px;font-size:14px;padding:0 12px}
+ .cli{flex:none}
+ .rtabs,.ruler,.np,.colhdr,.cmdbar,.icons,.tasks{display:none}
+ .docwrap{overflow:visible;padding:0;background:#fff}
+ .page{padding:20px 16px 26px;font-size:16px;line-height:1.7;box-shadow:none;margin:0}
+ .page h1{font-size:26px}
+ .lead{font-size:17.5px}
+ .prose h2{font-size:21px}
+ .prose code{font-size:15px}
+ .prose pre{font-size:14px;margin-left:-4px;margin-right:-4px}
+ .prose.learned{padding:16px 14px}
+ .post-nav{flex-direction:column}
+ .btn7{min-height:44px;font-size:15px;padding:8px 14px}
+ .fv{display:block}
+ .files{overflow:visible;padding:14px 10px 16px}
+ .intro{font-size:16px}
+ .item{grid-template-columns:40px minmax(0,1fr);padding:12px 6px;border-color:#e3eaf3;background:#fafcff;margin-top:10px}
+ .item .g{width:40px;height:44px}
+ .item .dt,.item .st{grid-column:2;padding:0}
+ .item .st b{display:inline;font-size:15px;margin-right:4px}
+ .item h2{font-size:18px}.item p{font-size:15.5px}
+ .sbar{display:none}
+ .task{position:fixed;height:calc(54px + env(safe-area-inset-bottom));padding:0 0 env(safe-area-inset-bottom) 66px}
+ .orb{left:8px;bottom:calc(3px + env(safe-area-inset-bottom));width:50px;height:50px}
+ .orb::after{left:15px;top:12px}
+ .tname{display:flex;align-items:center;align-self:stretch;min-height:48px;padding-right:12px;color:#fff;font-size:15px;font-weight:600;text-shadow:0 0 4px #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}
+ .tbl table{min-width:0;font-size:14.5px}
+ .tbl th,.tbl td{padding:8px 9px}
+ .tray{font-size:13px}
+ .srv{width:44px;height:44px}.srv::before{left:17px;top:14px}.srv::after{left:19px;top:16px}
+ .selfhost{font-size:14.5px;line-height:1.45;padding:10px 12px}
+ .sm{position:fixed;left:0;right:0;top:0;bottom:calc(54px + env(safe-area-inset-bottom));width:auto;max-height:none;border-radius:0;flex-direction:column;padding:18px 16px 20px;overflow-y:auto;gap:14px}
+ .sm .uimg{position:static;width:96px;height:96px;margin:6px auto 0;flex:none}
+ .sm .smn{display:block;text-align:center;color:#fff;text-shadow:0 0 4px #000;font-size:20px;font-weight:600;line-height:1.3}
+ .sm .smn small{display:block;font-size:14px;font-weight:400;opacity:.9}
+ .sm .lc{width:auto;padding:6px;flex:none}
+ .sm .lc a{min-height:52px;font-size:16px}
+ .sm .rc{padding:0;flex:none}
+ .sm .rc a{min-height:48px;display:flex;align-items:center;font-size:16px;padding:8px 12px}
+ .sm .smx{position:absolute;top:10px;right:10px;bottom:auto;min-width:48px;min-height:44px;font-size:15px}
+}
+/* theme toggle */
+.thm{display:none;width:16px;height:16px;position:relative;cursor:pointer;border:0;background:none;padding:0}
+html.js .thm{display:block}
+.thm::before{content:"";position:absolute;left:2px;top:1px;width:12px;height:12px;border-radius:50%;box-shadow:inset -4px -1px 0 0 #fff;transform:rotate(-20deg);filter:drop-shadow(0 0 2px #000)}
+html.dark .thm::before{left:4px;top:4px;width:8px;height:8px;background:#ffd76a;box-shadow:0 0 0 2px rgba(255,215,106,.35),0 0 6px #ffd76a;transform:none;filter:none}
+.i-thm::before{content:"";position:absolute;left:7px;top:4px;width:28px;height:28px;border-radius:50%;box-shadow:inset -9px -3px 0 0 #f2c94c;transform:rotate(-20deg);filter:drop-shadow(0 1px 1px rgba(0,0,0,.45))}
+html.dark .i-thm::before{left:12px;top:9px;width:18px;height:18px;background:radial-gradient(circle at 40% 35%,#fff3c2,#ffd76a 55%,#f2a93b);box-shadow:0 0 0 4px rgba(255,215,106,.3),0 0 10px rgba(255,215,106,.8);transform:none}
+.sm .lc button{display:none;align-items:center;gap:8px;padding:4px 6px;border:1px solid transparent;border-radius:3px;font:inherit;font-size:12px;color:#000;background:none;cursor:pointer;width:100%;text-align:left}
+html.js .sm .lc button{display:flex}
+.sm .lc button .g{width:30px;height:30px;margin:0;transform:scale(.75);transform-origin:left top;flex:none}
+.sm .lc button:hover,.sm .lc button:focus-visible{background:linear-gradient(#f2f8fe,#dcecfc);border-color:#7da2ce}
+.sm .lc .st{margin-left:auto;font-size:11px;font-weight:600;color:#4a5568;border:1px solid #c5d0de;border-radius:2px;padding:0 5px;background:#f4f7fb}
+@media (prefers-reduced-motion:no-preference){html.theme-anim *,html.theme-anim *::before,html.theme-anim *::after{transition:background-color .25s ease,color .25s ease,border-color .25s ease,box-shadow .25s ease!important}}
+/* ===== dark theme: Windows 7 "dark Aero" ===== */
+html.dark{background:#040d1d}
+html.dark body{color:#e3e8ef}
+:where(html.dark) a{color:#8cc4ff}
+html.dark .wall{filter:brightness(.46) saturate(1.15)}
+html.dark .cli :focus-visible{outline-color:#8cc4ff}
+html.dark .win{border-color:rgba(0,0,0,.85);background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.04) 28px,rgba(40,60,90,.18)),rgba(16,24,38,.68);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2),0 6px 26px rgba(0,0,0,.7)}
+html.dark .tb .t{color:#f2f6fb;text-shadow:0 0 6px #000,0 0 3px #000,0 0 1px #000}
+html.dark .crumb{background:rgba(24,29,37,.94);border-color:rgba(0,0,0,.8)}
+html.dark .crumb a,html.dark .crumb span{color:#e3e8ef}
+html.dark .crumb .ar{color:#9aa6b5}
+html.dark .crumb a:hover{background:linear-gradient(#2b4058,#22364c)}
+html.dark .cli{background:#1c2129;border-color:rgba(0,0,0,.8)}
+html.dark .cmdbar,html.dark .sbar,html.dark .rtabs{background:linear-gradient(#2b313b,#222830);border-color:#3a4351;color:#c9d4e3}
+html.dark .cmdbar a{color:#a9d0ff}
+html.dark .rtabs span.on{background:#1c2129;border-color:#3a4351}
+html.dark .ruler{background:repeating-linear-gradient(90deg,transparent 0 9px,#5d6878 9px 10px) 0 9px/100% 5px no-repeat,#1c2129;border-color:#333b47}
+html.dark .docwrap{background:#0e1218;scrollbar-color:#4b5566 #161a20}
+html.dark .page{background:#1c2129;color:#e3e8ef;box-shadow:0 0 5px rgba(0,0,0,.8)}
+html.dark .page h1{color:#eef4fc}
+html.dark .meta{color:#aeb9c8}
+html.dark .meta .hist{background:#3a2f0e;border-color:#7d6620;color:#f7dc8f}
+html.dark .meta .pill,html.dark .item .tag{background:linear-gradient(#24405f,#1c3450);border-color:#41699a;color:#d0e3fb}
+html.dark .lead{color:#c6cfdb}
+html.dark .prose,html.dark .post-nav{border-color:#333b47}
+html.dark .prose .k{color:#b9d47e}
+html.dark .prose h2{color:#9cc7f7}
+html.dark .prose li::marker{color:#8cc4ff}
+html.dark .prose strong{color:#fff}
+html.dark .prose a{color:#8cc4ff}
+html.dark .prose code{background:#262d37;border-color:#3a4350;color:#d6e4f5}
+html.dark .prose pre{border-color:#000}
+html.dark .prose pre code{background:none;border:0;color:inherit}
+html.dark .tbl{border-color:#36404d}
+html.dark .tbl th{color:#aebdd0;background:linear-gradient(#272d36,#20252d);border-color:#2c333d}
+html.dark .tbl th,html.dark .tbl td{border-bottom-color:#2c333d}
+html.dark .tbl tbody tr:hover td{background:#222b36}
+html.dark .good{color:#6fdc85!important}html.dark .warn{color:#f0c35a!important}html.dark .bad{color:#ff8f80!important}
+html.dark .prose.learned{border-color:#2f6b3d;background:linear-gradient(#17271c,#132119)}
+html.dark .prose.learned .k{color:#6fdc85}
+html.dark .btn7{border-color:#5d6675;color:#eef2f7;background:linear-gradient(#3d444f,#353b45 45%,#2d333c 50%,#282d35)}
+html.dark .btn7:hover{border-color:#5ea3dc;background:linear-gradient(#34587e,#2c4d70 45%,#244260 50%,#22405c)}
+html.dark .np{border-color:#2c333d}
+html.dark .np a,html.dark .np div{color:#e3e8ef}
+html.dark .np a:hover{background:linear-gradient(#2b4058,#22364c);border-color:#4f78a8}
+html.dark .np .h{color:#b0d0fa}
+html.dark .np .on{background:linear-gradient(#24405f,#1c3450);border-color:#41699a}
+html.dark .intro{color:#c6cfdb}
+html.dark .intro h1{color:#b0d0fa}
+html.dark .colhdr{color:#aebdd0;border-color:#2c333d;background:linear-gradient(#232932,#1e232b)}
+html.dark .item{color:#e3e8ef}
+html.dark .item:hover,html.dark .item:focus-visible{background:linear-gradient(#24364b,#1f2f42);border-color:#41699a}
+html.dark .item h2{color:#92c3ff}
+html.dark .item p{color:#bcc7d5}
+html.dark .item .dt,html.dark .item .st{color:#aeb9c8}
+html.dark .item .st b{color:#6fdc85}
+html.dark .web::before{background:linear-gradient(#e9eef5,#c9d3e0)}
+html.dark .selfhost{background:#1a2430;border-color:#334050;color:#d3dbe5}
+html.dark .task{background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.03) 45%,rgba(0,0,0,.22) 50%,rgba(0,0,0,.1)),rgba(8,12,20,.84);border-top-color:#000;box-shadow:inset 0 1px rgba(255,255,255,.2)}
+html.dark .sm{background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.03) 40px),rgba(12,18,30,.94);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2),0 6px 24px rgba(0,0,0,.8)}
+html.dark .sm .lc{background:#1e232b;border-color:#000}
+html.dark .sm .lc a,html.dark .sm .lc button{color:#e6ebf1}
+html.dark .sm .lc a:hover,html.dark .sm .lc a:focus-visible,html.dark .sm .lc button:hover,html.dark .sm .lc button:focus-visible{background:linear-gradient(#2b4058,#22364c);border-color:#4f78a8}
+html.dark .sm .lc .st{color:#9fe8b1;background:#11301b;border-color:#2f7c45}
+html.dark .sm .uimg{background:linear-gradient(#3a4a60,#1d2a3c)}
+@media (max-width:768px),(hover:none) and (pointer:coarse){
+ .thm{width:44px;height:44px}.thm::before{left:15px;top:15px;width:14px;height:14px}html.dark .thm::before{left:17px;top:17px;width:10px;height:10px}
+ .sm .lc button{min-height:52px;font-size:16px}
+ html.dark .win{background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.04) 28px),rgba(16,24,38,.88)}
+ html.dark .tb{background:linear-gradient(180deg,rgba(62,72,88,.97),rgba(40,48,62,.97) 50%,rgba(30,37,49,.97) 51%,rgba(38,46,60,.97));border-bottom-color:#000;box-shadow:inset 0 1px rgba(255,255,255,.18)}
+ html.dark .docwrap{background:#1c2129}
+ html.dark .page{box-shadow:none}
+ html.dark .item{border-color:#2c333d;background:#20252d}
+}
+@media (max-width:420px){.clk{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+"""
+
+WALL='''<div class="wall" aria-hidden="true">
+ <svg viewBox="0 0 1280 800" preserveAspectRatio="none" fill="none">
+  <defs><filter id="bl" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="6"/></filter><filter id="bl2"><feGaussianBlur stdDeviation="1.4"/></filter>
+  <linearGradient id="st" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".45" stop-color="#cfeeff" stop-opacity=".8"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+  <g filter="url(#bl)" stroke="url(#st)"><path d="M-40 560C220 420 470 520 700 380S1050 170 1330 240" stroke-width="34" opacity=".35"/><path d="M-40 640C260 500 520 590 760 450S1100 260 1330 330" stroke-width="18" opacity=".45"/><path d="M-40 470C200 360 430 420 650 320S1020 120 1330 150" stroke-width="10" opacity=".5"/></g>
+  <g filter="url(#bl2)" stroke="url(#st)"><path d="M-40 600C240 470 500 560 730 420S1080 220 1330 290" stroke-width="2.5" opacity=".9"/><path d="M-40 520C230 400 460 480 690 350S1040 150 1330 200" stroke-width="1.5" opacity=".8"/><path d="M-40 680C280 540 540 620 780 480S1110 300 1330 370" stroke-width="1.2" opacity=".6"/></g>
+ </svg>
+</div>'''
+
+ICONS='''<nav class="icons" aria-label="Desktop shortcuts">
+ <a class="ic" href="/"><span class="g i-pc"></span>Desktop (Home)</a>
+ <a class="ic" href="/blog/"><span class="g i-fold"></span>Write-ups</a>
+ <a class="ic" href="/#projects"><span class="g i-sec"></span>Projects</a>
+ <a class="ic" href="https://github.com/oemarino/homelab" target="_blank" rel="noopener noreferrer"><span class="g i-net"></span>homelab on GitHub</a>
+</nav>'''
+
+def chrome_bottom(active):
+    return f'''<nav class="sm hid" id="sm" aria-label="Start menu">
+ <div class="uimg"><picture><source type="image/webp" srcset="/img/osvaldo.webp"><img src="/img/osvaldo.jpg" alt="" width="56" height="56" decoding="async"></picture></div>
+ <div class="smn">Osvaldo Marino<small>Cybersecurity student</small></div>
+ <div class="lc">
+  <a href="/"><span class="g i-pc"></span>Home (desktop)</a>
+  <a href="/#about"><span class="g i-doc"></span>About Me</a>
+  <a href="/#projects"><span class="g i-sec"></span>Projects</a>
+  <a href="/#experience"><span class="g i-doc"></span>Experience &amp; Skills</a>
+  <a href="/blog/"><span class="g i-fold"></span>Write-ups</a>
+  <button type="button" data-theme-toggle aria-pressed="false"><span class="g i-thm" aria-hidden="true"></span><span>Dark theme</span><span class="st" aria-hidden="true">Off</span></button>
+ </div>
+ <div class="rc">
+  <a href="https://github.com/oemarino/homelab" target="_blank" rel="noopener noreferrer">GitHub: homelab repo ↗</a>
+  <a href="https://github.com/oemarino" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+  <a href="https://www.linkedin.com/in/omarino1" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+  <a href="https://tryhackme.com/p/osvaldomarino82" target="_blank" rel="noopener noreferrer">TryHackMe ↗</a>
+  <a href="/#contact">Contact</a>
+  <!--email_off--><a href="mailto:contact@osvaldomarino.dev">Email me</a><!--/email_off-->
+ </div>
+ <button type="button" class="smx" id="smx">Close ✕</button>
+</nav>
+<div class="task">
+ <a class="orb" id="orb" href="/" aria-label="Start menu (home)" aria-controls="sm"></a>
+ <a class="tname" href="/">Osvaldo Marino</a>
+ <div class="tasks"><a class="tk" href="/" title="Home (desktop)" aria-label="Home (desktop)"><span class="g i-pc"></span></a><a class="tk{' on' if active=='index' else ''}" href="/blog/" title="Write-ups" aria-label="Write-ups"><span class="g i-fold"></span></a>{'<span class="tk on" title="Document"><span class="g i-doc"></span></span>' if active=='post' else ''}</div>
+ <div class="tray"><button type="button" class="thm" data-theme-toggle aria-pressed="false"><span class="vh">Dark theme</span></button><a class="srv" href="/#server" title="Homelab server: online, serving this site" aria-label="Homelab server: online, serving this site. About this server"></a><div class="clk" aria-hidden="true"><div id="t1"></div><div id="t2"></div></div></div>
+</div>'''
+
+def head(title, desc, url, ogtype, ld=None):
+    t=html.escape(title); d=html.escape(desc)
+    ldtag=('<script type="application/ld+json">'+json.dumps(ld,ensure_ascii=False,separators=(',',':')).replace('</','<\\/')+'</script>') if ld else ''
+    return f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{t}</title>
+<meta name="description" content="{d}">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0d4790" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a1424" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="{url}">
+<meta property="og:type" content="{ogtype}">
+<meta property="og:site_name" content="Osvaldo Marino">
+<meta property="og:title" content="{t}">
+<meta property="og:description" content="{d}">
+<meta property="og:url" content="{url}">
+<meta property="og:image" content="{COVER}">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{html.escape(COVER_ALT)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{t}">
+<meta name="twitter:description" content="{d}">
+<meta name="twitter:image" content="{COVER}">
+<meta name="twitter:image:alt" content="{html.escape(COVER_ALT)}">
+{FAVICON}
+<link rel="preload" href="/fonts/opensans.woff2" as="font" type="font/woff2" crossorigin>
+<script src="/theme.js?v={THV}"></script>
+<script src="/blog.js?v={JSV}" defer></script>
+{ldtag}
+<style>{CSS}</style>
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+{WALL}
+{ICONS}
+'''
+
+SH_LINK='<p class="selfhost"><span class="led" aria-hidden="true"></span>This site is self-hosted on my homelab server. <a href="/blog/zero-open-ports-website/">How I host it →</a></p>'
+SH_SELF='<p class="selfhost"><span class="led" aria-hidden="true"></span>You’re reading this on my homelab server. <a href="/#server">About this server →</a></p>'
+CAPS='<div class="cap"><span aria-hidden="true">–</span><span aria-hidden="true">□</span><a class="x" href="/" aria-label="Close and go home" title="Close (go home)">✕</a></div>'
+PIC_SMALL=''
+
+DATE='<time datetime="2026-10-20">October 20, 2026</time>'
+def pdate(p):
+    d=p.get('date')
+    return f'<time datetime="{d[0]}">{d[1]}</time>' if d else DATE
+def post_page(p, lead, sections, prev=None, nxt=None):
+    secs=''.join(f'\n     <section class="prose{(" "+c) if c else ""}">{s}\n     </section>' for s,c in sections)
+    pn=(f'<a class="btn7" href="/blog/{prev["slug"]}/">← {html.escape(prev["title"])}</a>' if prev else '<a class="btn7" href="/blog/">← All write-ups</a>') + \
+       (f'<a class="btn7" href="/blog/{nxt["slug"]}/">{html.escape(nxt["title"])} →</a>' if nxt else '<a class="btn7" href="/">Home →</a>')
+    t=html.escape(p['title'])
+    url=f"{SITE}/blog/{p['slug']}/"
+    ld={'@context':'https://schema.org','@type':'BlogPosting','headline':p['title'],'description':p['desc'],'url':url,'mainEntityOfPage':url,
+        'datePublished':p.get('date',('2026-10-20',))[0],'dateModified':p.get('date',('2026-10-21',))[0],'image':COVER,'inLanguage':'en-US',
+        'author':{'@type':'Person','@id':SITE+'/#person','name':'Osvaldo Marino','url':SITE+'/'},
+        'publisher':{'@type':'Person','@id':SITE+'/#person','name':'Osvaldo Marino'},'keywords':html.unescape(p['tag'])}
+    return head(f"{p['title']} | Osvaldo Marino", p['desc'], url, 'article', ld) + f'''<div class="win" role="presentation">
+ <div class="tb"><span class="mi g i-doc"></span><div class="t">{t} - WordPad</div>{CAPS}</div>
+ <nav class="nav" aria-label="Location"><a class="nb" href="/blog/" aria-label="Back to Write-ups" title="Back to Write-ups">◄</a><span class="nb d" aria-hidden="true">►</span><div class="crumb"><span class="ar hide-m">▸</span><a class="hide-m" href="/">Osvaldo</a><span class="ar hide-m">▸</span><span class="hide-m">Documents</span><span class="ar">▸</span><a href="/blog/">Write-ups</a><span class="ar">▸</span><span class="cur">{t}</span></div><a class="homebtn" href="/">⌂ Home</a></nav>
+ <div class="cli">
+  <div class="rtabs" aria-hidden="true"><span class="f">▾</span><span class="on">Home</span><span>View</span></div>
+  <div class="ruler" aria-hidden="true"></div>
+  <div class="docwrap" tabindex="0" aria-label="Article">
+   <main class="page" id="content">
+    <article>
+     <header>
+      <div class="meta"><span class="pill">{p['tag']}</span><span>{pdate(p)}</span><span>· Osvaldo Marino</span><span class="hist">Results are a snapshot from tests on {p.get('snap','Oct 20, 2026')}</span></div>
+      <h1>{t}</h1>
+      <p class="lead">{lead}</p>
+     </header>{secs}
+    </article>
+    <nav class="post-nav" aria-label="More write-ups">{pn}</nav>
+    {SH_SELF if p["slug"]=="zero-open-ports-website" else SH_LINK}
+   </main>
+  </div>
+  <div class="sbar" aria-hidden="true"><span>{p['slug']}.htm</span><span><span class="led"></span>Served from my homelab server</span><span>osvaldomarino.dev/blog</span></div>
+ </div>
+</div>
+''' + chrome_bottom('post') + '\n</body>\n</html>\n'
+POSTS=[
+ dict(slug='hardening-my-homelab', title='Hardening my homelab: 9 findings to 0',
+      desc='How I took a Greenbone/OpenVAS scan of my homelab server from 9 Medium/Low findings to 0 real findings, with the before/after numbers.',
+      tag='Vulnerability management', blurb='Greenbone found 6 Medium and 3 Low issues on my server. I fixed or contained every real one and proved the last one is a false positive.',
+      stat='9 → 0', statl='real findings'),
+ dict(slug='home-soc-with-wazuh', title='Building a home SOC with Wazuh',
+      desc='A single-node Wazuh 4.14.9 SIEM, an isolated DVWA/Juice Shop attack lab, and what it did and did not detect.',
+      tag='Detection &amp; SIEM', blurb='I deployed Wazuh, attacked my own isolated lab, and wrote down what the SIEM caught, including the SQL injection it missed.',
+      stat='5710 → 5712', statl='brute-force correlation'),
+ dict(slug='zero-open-ports-website', title='Hosting a hardened website from home with zero open ports',
+      desc='How osvaldomarino.dev runs from my homelab in a locked-down nginx container behind a Cloudflare Tunnel, with no port forwards.',
+      tag='Secure hosting', blurb='This site runs on my homelab server, but my router has no port forward for it. Here’s the container, header and tunnel setup.',
+      stat='0 / 1,007', statl='IPv4 TCP ports open'),
+ dict(slug='simulated-attack-incident-report', title='Incident report: attacking my own lab and grading my SIEM',
+      desc='A controlled, multi-stage web attack against my isolated DVWA/Juice Shop lab, written up as a SOC incident report: what Wazuh caught, including my custom SQLi rule, and what it missed.',
+      tag='Incident response', blurb='I ran a controlled recon + SQLi/XSS/LFI attack chain against my isolated lab and wrote it up like a real SOC case, gaps included.',
+      stat='3 / 3', statl='boolean SQLi caught (custom rule)',
+      date=('2026-10-26','October 26, 2026'), snap='Oct 26, 2026'),
+]
+REPO='<a href="https://github.com/oemarino/homelab" target="_blank" rel="noopener noreferrer">github.com/oemarino/homelab</a>'
+
+# ----- Post 1 -----
+p1=post_page(POSTS[0],
+ 'I pointed a vulnerability scanner at my own homelab server, fixed what it found, and scanned again. Here are the real numbers, including the one finding I couldn’t make disappear and why that’s okay.',
+ [('''
+          <div class="k">The scan</div>
+          <h2>Same scanner, same target, before and after</h2>
+          <p>The server runs Ubuntu Server 24.04 with OpenSSH, a game-server panel (AMP), Webmin and Docker. I scanned it with <strong>Greenbone Community Edition (OpenVAS)</strong> using the “Full and fast” config across all TCP ports plus the Nmap top 100 UDP ports, and filtered both reports the same way (QoD ≥ 70, no overrides).</p>
+          <div class="tbl"><table>
+            <thead><tr><th>Severity</th><th>Before</th><th>After</th></tr></thead>
+            <tbody>
+              <tr><td>Critical</td><td class="num good">0</td><td class="num good">0</td></tr>
+              <tr><td>High</td><td class="num good">0</td><td class="num good">0</td></tr>
+              <tr><td>Medium</td><td class="num warn">6</td><td class="num">1 <span class="warn" style="font-weight:500">(false positive)</span></td></tr>
+              <tr><td>Low</td><td class="num warn">3</td><td class="num good">0</td></tr>
+              <tr><td>Log (info only)</td><td class="num">43</td><td class="num">51</td></tr>
+            </tbody>
+          </table></div>
+          <p style="margin-top:14px">Medium and Low findings went from <strong>9 to 1</strong>, and that one is a documented false positive, so <strong>0 real findings are left</strong>. Info-level entries went up because a new HTTPS endpoint produces informational TLS notes with no severity.</p>''',''),
+  ('''
+          <div class="k">The fixes</div>
+          <h2>What I changed</h2>
+          <ul>
+            <li><strong>Weak SSH MACs (Low).</strong> I added an sshd drop-in with explicit strong <code>MACs</code>, <code>KexAlgorithms</code> (post-quantum hybrid <code>sntrup761x25519</code> first) and <code>Ciphers</code>. I validated it with <code>sshd -t</code>, reloaded instead of restarting, and tested a new login before closing my old session. Now <!--email_off--><code>ssh -m umac-64@openssh.com</code><!--/email_off--> gets “no matching MAC found”.</li>
+            <li><strong>Cleartext panel login over HTTP (Medium).</strong> I put a hardened nginx TLS reverse proxy in front of the panel (TLS 1.2/1.3, ECDHE + AEAD ciphers, HSTS, non-root and read-only container). The firewall now drops plain HTTP except from localhost and the encrypted Tailscale network.</li>
+            <li><strong>Weak key exchange and CBC/3DES ciphers on the panel’s built-in SFTP servers (4 × Medium).</strong> The vendor offers no setting to fix the crypto, so I reduced exposure instead: rules in ufw’s <code>before.rules</code> allow those ports only over Tailscale and drop them everywhere else, ahead of any user rule. <em>Residual risk:</em> the weak algorithms still exist, but only authenticated tailnet devices can reach them.</li>
+            <li><strong>TCP timestamps (Low).</strong> I set <code>net.ipv4.tcp_timestamps = 0</code> so the server stops leaking its uptime.</li>
+            <li><strong>ICMP timestamp replies (Low).</strong> The firewall drops ICMP type 13. Normal ping still works.</li>
+          </ul>''',''),
+  ('''
+          <div class="k">The last Medium</div>
+          <h2>Proving a false positive</h2>
+          <p>Greenbone reported “Linux Home Folder Accessible” because a request for <code>/.ssh/known_hosts</code> returned HTTP 200. The panel is a single-page app that returns its login page for <em>every</em> unknown path, so a 200 doesn’t mean a file was served, and no <code>known_hosts</code> content ever came back. When I moved the panel behind the HTTPS proxy, the finding moved with it to the new port. That confirms it comes from the app’s routing, not the filesystem. I documented it and accepted it rather than hiding it.</p>''',''),
+  ('''
+          <div class="k">How I worked</div>
+          <h2>Changing a live server safely</h2>
+          <ul>
+            <li>I backed up every file before touching it and changed one control at a time.</li>
+            <li>After each change I checked that my SSH session still worked and the panel still loaded.</li>
+            <li>Before rescanning, I checked reachability from the scanner’s own Docker network so the rescan would really test the new rules.</li>
+          </ul>
+          <p>The sanitized configs are in my repo: '''+REPO+'''.</p>''',''),
+  ('''
+          <div class="k">What I learned</div>
+          <h2>What I learned</h2>
+          <ul>
+            <li><strong>“0 Critical/High” isn’t the finish line.</strong> The Medium and Low items (cleartext logins, weak crypto, info leaks) are exactly what an attacker chains together.</li>
+            <li><strong>When you can’t fix it, contain it.</strong> Limiting a weak service to a VPN-only path is a legitimate control, as long as you write down the residual risk.</li>
+            <li><strong>Where a firewall rule lives matters.</strong> Putting the rules in <code>before.rules</code> means a careless <code>ufw allow</code> later can’t quietly undo them.</li>
+            <li><strong>Verify with evidence.</strong> Every fix was confirmed by a rescan or a direct test, and the false positive was proven, not assumed.</li>
+          </ul>''','learned')],
+ None, POSTS[1])
+
+# ----- Post 2 -----
+p2=post_page(POSTS[1],
+ 'I wanted to see attacks from the defender’s side, so I built a small SOC at home: a Wazuh SIEM watching my server, plus an isolated, deliberately vulnerable lab to attack. Then I checked what it caught and what it missed.',
+ [('''
+          <div class="k">The build</div>
+          <h2>Wazuh 4.14.9 plus an isolated attack lab</h2>
+          <ul>
+            <li><strong>SIEM:</strong> single-node Wazuh 4.14.9 (manager, indexer, dashboard) in Docker, with my homelab server enrolled as a monitored endpoint.</li>
+            <li><strong>Telemetry:</strong> SSH/sudo/PAM auth logs, ufw firewall logs, syslog, Docker engine events, <strong>real-time file integrity monitoring</strong> on <code>/etc</code>, the CIS Ubuntu 24.04 benchmark, and the lab’s web access logs.</li>
+            <li><strong>Attack lab:</strong> DVWA and OWASP Juice Shop on a Docker <code>internal</code> network with no internet access (an egress test from the DVWA container was blocked). Only an nginx proxy is reachable, and only from the server or over Tailscale. The lab is off unless I start it with <code>lab up</code>.</li>
+          </ul>''',''),
+  ('''
+          <div class="k">Hardening the SIEM itself</div>
+          <h2>A security tool shouldn’t be the weak spot</h2>
+          <ul>
+            <li>Every published port is bound to specific interfaces (localhost, LAN, Tailscale) and never <code>0.0.0.0</code>, because Docker-published ports bypass ufw. I verified it with <code>ss</code>.</li>
+            <li>The indexer and the Wazuh API are localhost-only, and the unused syslog port isn’t published at all.</li>
+            <li>I replaced all the default demo passwords with random 26-character secrets <strong>before first boot</strong> and confirmed the old defaults are rejected (HTTP 401).</li>
+          </ul>''',''),
+  ('''
+          <div class="k">Results</div>
+          <h2>What Wazuh detected</h2>
+          <div class="tbl"><table>
+            <thead><tr><th>Test</th><th>Result</th><th>Rules</th></tr></thead>
+            <tbody>
+              <tr><td>6 failed SSH logins as a nonexistent user</td><td class="good">Detected: 11 alerts + 1 brute-force correlation (level 10)</td><td><code>5710</code> → <code>5712</code></td></tr>
+              <tr><td>Create, modify and delete a test file in <code>/etc</code></td><td class="good">Detected within seconds</td><td><code>554</code> <code>550</code> <code>553</code></td></tr>
+              <tr><td>SQLi: <code>UNION SELECT user,password FROM users</code></td><td class="good">Detected (attack succeeded)</td><td><code>31106</code></td></tr>
+              <tr><td>SQLi: <code>1' OR '1'='1</code></td><td class="bad">Missed (attack succeeded, no alert)</td><td>none</td></tr>
+              <tr><td>CIS Ubuntu 24.04 benchmark</td><td class="warn">50% on the first scan</td><td><code>19003</code></td></tr>
+            </tbody>
+          </table></div>''',''),
+  ('''
+          <div class="k">Unplanned catch</div>
+          <h2>Triage on real noise</h2>
+          <p>While I was setting things up, a Greenbone rescan of the server was running. Its default-credential SSH checks produced <strong>735 rule 5710 alerts</strong> and <strong>1 level-10 brute-force alert</strong> within about a minute. The SIEM traced the activity to the scanner’s container, so I could confirm it was my own authorized scan and not an attack. That’s the everyday triage an analyst does: separating expected activity from real threats.</p>''',''),
+  ('''
+          <div class="k">The honest miss</div>
+          <h2>Signatures have gaps</h2>
+          <p>Both SQL injections worked against DVWA. Wazuh caught the <code>UNION</code>-based one with rule 31106 (“A web attack returned code 200”) but raised nothing for the boolean <code>OR '1'='1'</code> variant, even though it returned every user row. My next steps are a custom Wazuh rule for that pattern, or a WAF like ModSecurity with the OWASP Core Rule Set in front of the lab.</p>
+          <p>Configs (with secrets replaced by placeholders): '''+REPO+'''.</p>''',''),
+  ('''
+          <div class="k">What I learned</div>
+          <h2>What I learned</h2>
+          <ul>
+            <li><strong>Test your detections.</strong> I only know about the SQLi gap because I attacked my own lab and checked for the alert.</li>
+            <li><strong>Correlation beats volume.</strong> One level-10 brute-force alert (5712) is more useful than hundreds of individual failed logins.</li>
+            <li><strong>Context makes triage fast.</strong> Knowing which container generated the traffic turned 735 alerts into a 1-minute investigation.</li>
+            <li><strong>Isolation first.</strong> Vulnerable apps belong on a network with no internet egress, switched off when I’m not using them.</li>
+          </ul>''','learned')],
+ POSTS[0], POSTS[2])
+
+# ----- Post 3 -----
+p3=post_page(POSTS[2],
+ 'The site you’re reading is served from a server in my home, but my router has no port forward for it and the server’s firewall has no rule for it. Here’s how.',
+ [('''
+          <div class="k">The idea</div>
+          <h2>Let the server dial out instead of letting the internet dial in</h2>
+          <p>A <strong>Cloudflare Tunnel</strong> (<code>cloudflared</code>) on the server opens an <em>outbound</em> connection to Cloudflare. Visitors connect to Cloudflare over HTTPS, and Cloudflare passes requests down that tunnel to a web container listening only on <code>127.0.0.1</code>. There’s no inbound port to scan, no port forward on the router, and no firewall rule to get wrong.</p>
+          <pre><code>Visitor ──HTTPS──▶ Cloudflare ◀──outbound tunnel── cloudflared ──▶ localhost-only port ──▶ nginx container</code></pre>''',''),
+  ('''
+          <div class="k">The container</div>
+          <h2>A web server with as few privileges as possible</h2>
+          <ul>
+            <li><code>nginxinc/nginx-unprivileged</code> running as UID 101, never root</li>
+            <li><code>read_only: true</code> root filesystem, with small <code>noexec</code> tmpfs mounts for cache and temp files</li>
+            <li><code>cap_drop: ALL</code> and <code>no-new-privileges</code></li>
+            <li>Memory, CPU and process limits, so a bug can’t take down the rest of the homelab</li>
+            <li>The site files are mounted read-only, the server only answers GET/HEAD, and hidden files like <code>.git</code> or <code>.env</code> return 404</li>
+          </ul>''',''),
+  ('''
+          <div class="k">The headers</div>
+          <h2>A strict Content Security Policy</h2>
+          <p>Every response carries <code>X-Content-Type-Options: nosniff</code>, <code>X-Frame-Options: DENY</code>, a Referrer-Policy, a Permissions-Policy and Cross-Origin-Opener-Policy. The CSP starts from <code>default-src 'none'</code> and allows only what the site needs:</p>
+          <pre><code>default-src 'none'; script-src 'self'; style-src 'unsafe-inline';
+img-src 'self' data:; font-src 'self'; base-uri 'none';
+form-action 'none'; frame-ancestors 'none'</code></pre>
+          <p>Because inline scripts are blocked, all of this site’s JavaScript, including the Windows 7 desktop and the simulated Command Prompt, lives in small same-origin files. It’s also progressive enhancement: with JavaScript off, every word on the page is still visible.</p>''',''),
+  ('''
+          <div class="k">Verification</div>
+          <h2>Checking from the outside</h2>
+          <div class="tbl"><table>
+            <thead><tr><th>Check</th><th>Result</th></tr></thead>
+            <tbody>
+              <tr><td>IPv4, 1,007 TCP ports (including 22, 80 and 443)</td><td class="num good">0 open</td></tr>
+              <tr><td>IPv6, both server addresses, 16 common ports each</td><td class="good">All blocked (timed out)</td></tr>
+            </tbody>
+          </table></div>
+          <p style="margin-top:14px">I used public outside-in checkers, each validated against a host with known open ports, because my scanning machine’s proxied connection gave misleading <code>nmap</code> results. To be precise: I ran this check earlier the same day, before the site went live. The tunnel only makes outbound connections, so it adds no inbound port. It’s also not a full 65,535-port or UDP scan.</p>
+          <p>The sanitized compose file, nginx config and an example tunnel config are in '''+REPO+'''.</p>''',''),
+  ('''
+          <div class="k">What I learned</div>
+          <h2>What I learned</h2>
+          <ul>
+            <li><strong>The best open port is no open port.</strong> An outbound tunnel removes a whole class of exposure instead of trying to defend it.</li>
+            <li><strong>Least privilege applies to containers too.</strong> Non-root, read-only, no capabilities and resource limits cost nothing for a static site.</li>
+            <li><strong>Security constraints shape design.</strong> A strict CSP pushed me toward cleaner code with no inline scripts and graceful no-JS fallbacks.</li>
+            <li><strong>Measure what you claim, and state the limits.</strong> “Zero open ports” is backed by a validated scan, with its caveats written down.</li>
+          </ul>''','learned')],
+ POSTS[1], POSTS[3])
+
+# ----- Post 4 -----
+p4=post_page(POSTS[3],
+ 'I attacked my own isolated practice lab on purpose, in stages, like a real intruder would. Then I wrote it up the way a SOC analyst would: timeline, evidence, impact, and the gaps I found. Spoiler: the custom rule I wrote earlier caught every boolean SQL injection, and one attack got through without a single alert.',
+ [('''
+          <div class="k">Scope</div>
+          <h2>A controlled simulation, not a breach</h2>
+          <p>This was a <strong>self-authorized lab exercise</strong>. The attacker and the targets were both machines I own. The targets were <strong>DVWA</strong> and <strong>OWASP Juice Shop</strong>, two apps that are vulnerable on purpose, running on a Docker network with <strong>no internet access</strong>. They’re reachable only from the server itself or over my private Tailscale network, and they’re switched off unless I’m testing. No production service, third party or public-facing system was touched.</p>
+          <p>The point wasn’t to break the apps, which are built to be broken. It was to measure what my <strong>Wazuh 4.14.9</strong> SIEM actually detects, reading the lab’s nginx access logs, and to practice writing a proper incident report.</p>''',''),
+  ('''
+          <div class="k">The attack chain</div>
+          <h2>What I ran and what Wazuh saw</h2>
+          <div class="tbl"><table>
+            <thead><tr><th>Stage</th><th>Attack</th><th>Detection</th></tr></thead>
+            <tbody>
+              <tr><td>Recon</td><td><code>nmap -sV -sC</code> against the two lab apps</td><td class="good">Rule <code>31151</code>, level 10: many web 400s from one source (MITRE T1595.002)</td></tr>
+              <tr><td>SQLi (UNION)</td><td><code>1' UNION SELECT user,password FROM users</code></td><td class="good">Rule <code>31106</code>, level 6: web attack returned 200 (T1190)</td></tr>
+              <tr><td>SQLi (boolean) ×3</td><td><code>1' OR '1'='1</code>, <code>1' OR 1=1--</code>, <code>x' OR 'a'='a</code></td><td class="good">Custom rule <code>100101</code>, <strong>level 12</strong>, 3 of 3 (T1190)</td></tr>
+              <tr><td>Reflected XSS</td><td><code>&lt;script&gt;alert(1)&lt;/script&gt;</code></td><td class="good">Rule <code>31106</code>, level 6 (T1190)</td></tr>
+              <tr><td>File inclusion</td><td><code>../../../../etc/passwd</code></td><td class="good">Rule <code>31106</code>, level 6 (T1190)</td></tr>
+              <tr><td>Juice Shop SQLi (GET)</td><td>Product search <code>apple')) UNION SELECT 1--</code></td><td class="good">Rule <code>31103</code>, level 7: SQL injection attempt (T1190)</td></tr>
+              <tr><td>Juice Shop SQLi (POST)</td><td>Login bypass, <code>' OR 1=1--</code> in the JSON body</td><td class="bad">Missed: no alert</td></tr>
+            </tbody>
+          </table></div>
+          <p style="margin-top:14px">The whole chain took about two seconds after the scan, and the alerts landed within a second of the attacks. I skipped an SSH brute-force stage on purpose: the lab has no SSH service, and I wasn’t going to aim it at my real server’s SSH.</p>''',''),
+  ('''
+          <div class="k">The headline</div>
+          <h2>The detection gap I closed held up</h2>
+          <p>In my <a href="/blog/home-soc-with-wazuh/">first SOC lab test</a>, the boolean <code>OR '1'='1'</code> injection returned every user row and Wazuh said nothing, because the stock rules look for keywords like <code>UNION</code> or <code>SELECT</code>. I wrote <a href="https://github.com/oemarino/homelab/blob/main/docs/wazuh-custom-rule-boolean-sqli.md" target="_blank" rel="noopener noreferrer">custom rules 100100/100101</a> that match the <em>shape</em> of a boolean injection instead.</p>
+          <p>This time, all three boolean variants raised <strong>rule 100101 at level 12</strong>, the highest-severity alerts of the whole exercise, mapped to MITRE ATT&amp;CK <strong>T1190</strong> (Exploit Public-Facing Application). Recon was also caught by a <em>correlation</em> rule, not just a pile of individual 404s, which is the early “someone is scanning us” signal an analyst wants.</p>''',''),
+  ('''
+          <div class="k">The honest misses</div>
+          <h2>Where my pipeline is blind</h2>
+          <ul>
+            <li><strong>SQL injection in a POST body.</strong> The Juice Shop login bypass worked and raised nothing. nginx access logs record the method, URL and status code, not the request body, so a log-based SIEM never saw the payload. The fix is body inspection: a WAF like ModSecurity or Coraza with the OWASP Core Rule Set in front of the lab.</li>
+            <li><strong>No network-layer visibility.</strong> A plain TCP port scan with no web requests wouldn’t show up in these logs at all. Next step: Suricata as a network IDS, feeding Wazuh.</li>
+            <li><strong>Generic labels.</strong> XSS and file inclusion were both just “web attack returned 200.” They were detected, but an analyst would want them labelled as what they are, so I plan custom rules for those too.</li>
+          </ul>''',''),
+  ('''
+          <div class="k">Impact and cleanup</div>
+          <h2>Closing the case</h2>
+          <p><strong>Real impact: none.</strong> The “user table” the UNION injection dumped holds only DVWA’s demo accounts in a throwaway container. On a real app, the same injections would have exposed usernames and password hashes, which is why I rated the simulated severity <strong>High</strong>.</p>
+          <p>After the test I ran <code>lab down</code>, confirmed all four lab containers and both lab networks were gone and nothing was still listening on the lab ports, and deleted the temporary attack files. My SSH, firewall, VPN, Cloudflare and website configs were never touched.</p>
+          <p>The full report, with the timeline, sanitized alert JSON and every command I ran, is on GitHub: <a href="https://github.com/oemarino/homelab/blob/main/docs/incident-report-simulated-attack.md" target="_blank" rel="noopener noreferrer">incident-report-simulated-attack.md</a>.</p>''',''),
+  ('''
+          <div class="k">What I learned</div>
+          <h2>What I learned</h2>
+          <ul>
+            <li><strong>Retest your fixes.</strong> A detection rule only counts once it fires on a live attack, not just in a test tool.</li>
+            <li><strong>Know what your logs can’t see.</strong> The miss wasn’t a bad rule. The data simply wasn’t there, and no rule can match a payload that never gets logged.</li>
+            <li><strong>Severity tells a story.</strong> Level 12 on a likely-successful injection versus level 6 on a generic hit is the difference between “look now” and “look later.”</li>
+            <li><strong>Write it up like it’s real.</strong> A timeline, evidence and lessons learned turn a lab exercise into something another analyst could act on.</li>
+          </ul>''','learned')],
+ POSTS[2], None)
+
+if os.path.isdir(OUT): shutil.rmtree(OUT)
+for p,content in zip(POSTS,[p1,p2,p3,p4]):
+    os.makedirs(f"{OUT}/blog/{p['slug']}",exist_ok=True)
+    open(f"{OUT}/blog/{p['slug']}/index.html",'w').write(content)
+
+# ----- Blog index: Explorer window -----
+items=''.join(f'''
+     <a class="item" href="/blog/{p['slug']}/"><span class="g web"></span><div><h2>{html.escape(p['title'])}</h2><p>{p['blurb']}</p><span class="tag">{p['tag']}</span></div><div class="dt">{pdate(p)}</div><div class="st"><b>{p['stat']}</b>{p['statl']}</div></a>''' for p in POSTS)
+idxld={'@context':'https://schema.org','@type':'Blog','name':'Osvaldo Marino - Write-ups','url':SITE+'/blog/','author':{'@type':'Person','@id':SITE+'/#person','name':'Osvaldo Marino','url':SITE+'/'},
+       'blogPost':[{'@type':'BlogPosting','headline':p['title'],'url':f"{SITE}/blog/{p['slug']}/",'datePublished':p.get('date',('2026-10-20',))[0]} for p in POSTS]}
+idx=head('Write-ups | Osvaldo Marino','Hands-on cybersecurity write-ups by Osvaldo Marino: Greenbone hardening, a Wazuh home SOC, a simulated-attack incident report, and self-hosting with zero open ports.',SITE+'/blog/','website',idxld)+f'''<div class="win" role="presentation">
+ <div class="tb"><span class="mi g i-fold"></span><div class="t">Write-ups</div>{CAPS}</div>
+ <nav class="nav" aria-label="Location"><a class="nb" href="/" aria-label="Back to home" title="Back to home">◄</a><span class="nb d" aria-hidden="true">►</span><div class="crumb"><span class="ar">▸</span><a href="/">Osvaldo</a><span class="ar">▸</span><span>Documents</span><span class="ar">▸</span><span class="cur">Write-ups</span></div><a class="homebtn" href="/">⌂ Home</a></nav>
+ <div class="cli">
+  <div class="cmdbar"><a href="/">⌂ Home</a><a href="https://github.com/oemarino/homelab" target="_blank" rel="noopener noreferrer">Configs on GitHub ↗</a><a href="/#contact">Contact</a></div>
+  <div class="fv">
+   <nav class="np" aria-label="Navigation pane"><div class="h">☆ Favorites</div><a href="/"><span class="g i-pc"></span>Desktop</a><div class="on"><span class="g i-fold"></span>Write-ups</div><div class="h">Links</div><a href="https://github.com/oemarino" target="_blank" rel="noopener noreferrer"><span class="g i-net"></span>GitHub</a><a href="https://www.linkedin.com/in/omarino1" target="_blank" rel="noopener noreferrer"><span class="g i-net"></span>LinkedIn</a><a href="/#contact"><span class="g i-doc"></span>Contact</a></nav>
+   <main class="files" id="content">
+    <div class="intro"><h1>Blog</h1><p>Hands-on write-ups from my cybersecurity homelab: what I built, how I tested it, real results, and what I learned. The sanitized configs are on GitHub at {REPO}.</p></div>
+    <div class="colhdr" aria-hidden="true"><span>Name</span><span>Date</span><span>Result</span></div>{items}
+    {SH_LINK}
+   </main>
+  </div>
+  <div class="sbar" aria-hidden="true"><span>{len(POSTS)} items</span><span><span class="led"></span>Served from my homelab server</span><span>osvaldomarino.dev/blog</span></div>
+ </div>
+</div>
+'''+chrome_bottom('index')+'\n</body>\n</html>\n'
+open(f'{OUT}/blog/index.html','w').write(idx)
+shutil.copy(JS_SRC, f'{OUT}/blog.js'); shutil.copy(THEME_SRC, f'{OUT}/theme.js')
+for f in [f'{OUT}/blog/index.html']+[f"{OUT}/blog/{p['slug']}/index.html" for p in POSTS]:
+    h=open(f).read().lower()
+    for bad in ['raze','quiktrip','aerovista','src="/terminal.js','src="/reveal.js','<script>',' onclick=','104.15.','192.168.','100.89.','8088','8443','8080']:
+        assert bad not in h,(f,bad)
+print('ok, blog.js v='+JSV)
