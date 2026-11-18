@@ -47,3 +47,12 @@ On the homelab server, keep a git checkout of this repository, run `git pull`, t
 ## Updating the site when projects change
 
 When a homelab project, cert, or result changes, update the matching homepage section and, if needed, the write-up in `build/posts/`. Then rebuild the blog and commit the generated HTML with the source.
+
+## Build for deploy
+
+The server's Content-Security-Policy only allows inline styles, so `site/css/style.css` can't load as a separate file. Run `python3 build/make_dist.py` to make `dist/`, a copy of `site/` with the CSS inlined into every page, and deploy `dist/` instead of `site/`:
+
+```bash
+python3 build/make_dist.py
+rsync -av --delete dist/ raze@<server>:/opt/website/site/
+```
