@@ -45,16 +45,16 @@
     </div>
     <section class="glance-grid" aria-labelledby="glance-h">
       <article class="card glance">
-        <h3>9 findings down to 0 real issues</h3>
+        <h3><span class="stat">9</span> findings down to <span class="stat">0</span> real issues</h3>
         <p>A Greenbone scan of my Ubuntu server found 9 Medium/Low issues. I fixed or contained each real one and proved the last leftover was a false positive.</p>
       </article>
       <article class="card glance">
-        <h3>0 of 1,007 ports open from the internet</h3>
+        <h3><span class="stat">0</span> of <span class="stat">1,007</span> ports open from the internet</h3>
         <p>An outside-in check of my home connection found 0 of 1,007 IPv4 TCP ports open. The site is reached through an outbound-only Cloudflare Tunnel.</p>
       </article>
       <article class="card glance">
         <h3>Caught a missed SQL injection</h3>
-        <p>Custom Wazuh rules caught 3 of 3 boolean SQL injection payloads, with 0 false matches across 29,970 normal requests from my site's logs.</p>
+        <p>Custom Wazuh rules caught <span class="stat">3</span> of <span class="stat">3</span> boolean SQL injection payloads, with <span class="stat">0</span> false matches across <span class="stat">29,970</span> normal requests from my site's logs.</p>
       </article>
       <article class="card glance">
         <h3>Documented a simulated attack</h3>
@@ -68,11 +68,11 @@
         <h2 id="certs-h">Certifications &amp; training</h2>
         <ul>
           <li>
-            <div class="item-row"><span class="status">Completed</span> <span class="item">TryHackMe SOC Level 1</span></div>
+            <div class="item-row"><span class="status status-done">Completed</span> <span class="item">TryHackMe SOC Level 1</span></div>
             <span class="detail">Finished July 2026</span>
           </li>
           <li>
-            <div class="item-row"><span class="status">In progress</span> <span class="item">CompTIA Security+</span></div>
+            <div class="item-row"><span class="status status-progress">In progress</span> <span class="item">CompTIA Security+</span></div>
             <span class="detail">SY0-701 · Exam expected Dec 2026</span>
           </li>
         </ul>
@@ -175,7 +175,7 @@
       <h2 id="experience-h">Experience, education &amp; skills</h2>
     </div>
     <section class="card panel" aria-labelledby="experience-h">
-      <h3 class="sub" style="margin-top:0">Skills, and where I've used them</h3>
+      <h3 class="sub first">Skills, and where I've used them</h3>
       <table>
         <thead><tr><th>Area</th><th>What I've done</th><th>Evidence</th></tr></thead>
         <tbody>
@@ -207,7 +207,7 @@
       <p>My own server, at home. No hosting company or cloud provider. I set it up, secure it and monitor it myself.</p>
       <div class="two">
         <dl>
-          <dt>Status</dt><dd>Online. It served the page you're reading now.</dd>
+          <dt>Status</dt><dd><span class="live">Online</span>. It served the page you're reading now.</dd>
           <dt>Operating system</dt><dd>Ubuntu Server 24.04 LTS</dd>
           <dt>Hardware</dt><dd>Intel Core i5-6500T (4 cores) · 16 GB RAM</dd>
           <dt>Monitoring</dt><dd>Wazuh SIEM agent on the server</dd>
@@ -218,10 +218,10 @@
           <dt>Exposure check</dt><dd>0 of 1,007 IPv4 TCP ports open in an outside-in check Oct 20, 2026</dd>
         </dl>
       </div>
-      <p style="margin-top:1rem">The same server also runs my Wazuh SIEM and an isolated practice lab. <a href="/blog/zero-open-ports-website/">Read how I host this site</a>.</p>
+      <p class="follow">The same server also runs my Wazuh SIEM and an isolated practice lab. <a href="/blog/zero-open-ports-website/">Read how I host this site</a>.</p>
     </section>
 
-    <section class="card panel" id="contact" aria-labelledby="contact-h" style="margin-bottom:0">
+    <section class="card panel contact-panel" id="contact" aria-labelledby="contact-h">
       <h2 id="contact-h">Contact</h2>
       <ul class="contact">
         <li>GitHub: <a href="https://github.com/oemarino" target="_blank" rel="noopener noreferrer">github.com/oemarino</a></li>
